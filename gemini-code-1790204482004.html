@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="id" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Surat Cinta Spesial 💖</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Quicksand & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Canvas Confetti CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        * {
+            font-family: 'Quicksand', 'Outfit', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+
+        body {
+            background: linear-gradient(135deg, #fff0f5 0%, #ffe4e1 50%, #ffd1dc 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism Soft Pink Card Style */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.93);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 20px 40px -10px rgba(255, 105, 180, 0.2);
+        }
+
+        /* Gentle Floating Animation */
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(1deg); }
+        }
+        .animate-float {
+            animation: floatSlow 4s ease-in-out infinite;
+        }
+
+        /* Bear Bounce Animation */
+        @keyframes bearBounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-6px) scale(1.02); }
+        }
+        .animate-bear-bounce {
+            animation: bearBounce 2.5s ease-in-out infinite;
+        }
+
+        /* Puzzle Shake Effect on Invalid Drop */
+        @keyframes puzzleShake {
+            0%, 100% { transform: translate(0, 0); }
+            20%, 60% { transform: translate(-8px, 0); }
+            40%, 80% { transform: translate(8px, 0); }
+        }
+        .animate-shake {
+            animation: puzzleShake 0.4s ease-in-out;
+        }
+
+        /* Heart Glow Effect */
+        @keyframes heartGlow {
+            0%, 100% { filter: drop-shadow(0 0 15px rgba(255, 77, 109, 0.8)); transform: scale(1); }
+            50% { filter: drop-shadow(0 0 30px rgba(255, 182, 193, 0.95)); transform: scale(1.05); }
+        }
+        .heart-glow {
+            animation: heartGlow 2s infinite ease-in-out;
+        }
+
+        /* Sparkle Particle Effect */
+        .sparkle-particle {
+            position: absolute;
+            pointer-events: none;
+            background: radial-gradient(circle, #ffffff 20%, #ff4d6d 90%);
+            border-radius: 50%;
+            animation: sparkleFade 0.8s forwards ease-out;
+            z-index: 99;
+        }
+        @keyframes sparkleFade {
+            0% { opacity: 1; transform: scale(0.2) rotate(0deg); }
+            100% { opacity: 0; transform: scale(1.5) rotate(180deg); }
+        }
+
+        /* Evasive No Button Position Transition */
+        #btnNo {
+            transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .puzzle-piece-container {
+            touch-action: none;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4 relative overflow-hidden">
+
+    <!-- Falling Sakura Canvas -->
+    <canvas id="sakuraCanvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
+
+    <div id="musicPlayerWidget" class="fixed top-4 right-4 z-50 glass-card rounded-full px-4 py-2 flex items-center space-x-3 shadow-xl border border-pink-200 transition-all duration-300 hover:scale-105">
+        <div class="relative flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-pink-500 to-rose-400 text-white shadow-md">
+            <span id="musicDisc" class="text-xs">🎵</span>
+        </div>
+        <div class="hidden sm:flex flex-col text-left">
+            <span class="text-xs font-bold text-pink-700 leading-tight">TULUS</span>
+            <span class="text-[10px] text-pink-500 font-semibold leading-tight">Jatuh Suka</span>
+        </div>
+        <button id="toggleAudioBtn" class="bg-pink-100 hover:bg-pink-200 text-pink-600 rounded-full px-3 py-1 text-xs font-bold transition">
+            ▶️ Play
+        </button>
+    </div>
+
+    <!-- Audio Element -->
+    <audio id="bgAudio" loop preload="auto">
+        <source src="https://ia801503.us.archive.org/15/items/tulus-jatuh-suka/TULUS%20-%20Jatuh%20Suka.mp3" type="audio/mpeg">
+    </audio>
+
+    <main class="relative z-10 w-full max-w-lg">
+
+        <div class="relative w-full flex justify-center -mb-8 z-30">
+            <!-- Bear Speech Bubble -->
+            <div id="bearSpeechBubble" class="absolute -top-10 bg-white border-2 border-pink-300 px-3 py-1.5 rounded-2xl shadow-lg text-xs font-bold text-pink-600 transition-all duration-300 opacity-0 transform scale-75 pointer-events-none">
+                <span id="bearSpeechText">Eits, gak bisa dipencet! 😜</span>
+            </div>
+
+            <!-- Mascot SVG Container -->
+            <div class="w-32 h-32 animate-bear-bounce">
+                <!-- Solo Bear SVG -->
+                <svg id="bearSoloSvg" class="w-full h-full drop-shadow-md transition-all duration-500" viewBox="0 0 200 200" fill="none">
+                    <circle cx="100" cy="115" r="55" fill="#FCEADE"/>
+                    <circle cx="55" cy="65" r="22" fill="#FCEADE"/>
+                    <circle cx="55" cy="65" r="12" fill="#FFB3C1"/>
+                    <circle cx="145" cy="65" r="22" fill="#FCEADE"/>
+                    <circle cx="145" cy="65" r="12" fill="#FFB3C1"/>
+                    <circle cx="100" cy="95" r="48" fill="#FFF2E8"/>
+                    <ellipse cx="100" cy="105" rx="18" ry="14" fill="#FFFFFF"/>
+                    <ellipse cx="100" cy="98" rx="6" ry="4" fill="#590D22"/>
+                    <path d="M94 105 Q100 110 106 105" stroke="#590D22" stroke-width="2.5" stroke-linecap="round"/>
+                    <circle cx="80" cy="88" r="6" fill="#331018"/>
+                    <circle cx="78" cy="86" r="2" fill="#FFFFFF"/>
+                    <circle cx="120" cy="88" r="6" fill="#331018"/>
+                    <circle cx="118" cy="86" r="2" fill="#FFFFFF"/>
+                    <ellipse cx="70" cy="98" rx="8" ry="5" fill="#FF8FA3" opacity="0.8"/>
+                    <ellipse cx="130" cy="98" rx="8" ry="5" fill="#FF8FA3" opacity="0.8"/>
+                    <path d="M100 35 C100 35, 90 20, 80 30 C70 40, 100 60, 100 60 C100 60, 130 40, 120 30 C110 20, 100 35, 100 35 Z" fill="#FF4D6D"/>
+                </svg>
+
+                <!-- Hugging Bears SVG -->
+                <svg id="bearHugSvg" class="w-full h-full drop-shadow-md hidden transition-all duration-500" viewBox="0 0 240 200" fill="none">
+                    <!-- Left Bear -->
+                    <circle cx="75" cy="115" r="48" fill="#E6CCB2"/>
+                    <circle cx="40" cy="70" r="18" fill="#E6CCB2"/>
+                    <circle cx="40" cy="70" r="10" fill="#DDB892"/>
+                    <circle cx="80" cy="95" r="40" fill="#EDE0D4"/>
+                    <ellipse cx="70" cy="102" rx="12" ry="9" fill="#FFFFFF"/>
+                    <ellipse cx="68" cy="98" rx="4" ry="3" fill="#7F5539"/>
+                    <path d="M55 90 Q62 82 70 90" stroke="#7F5539" stroke-width="3" stroke-linecap="round" fill="none"/>
+                    <ellipse cx="56" cy="98" rx="6" ry="4" fill="#FFB3C1"/>
+
+                    <!-- Right Bear -->
+                    <circle cx="155" cy="115" r="48" fill="#FCEADE"/>
+                    <circle cx="190" cy="70" r="18" fill="#FCEADE"/>
+                    <circle cx="190" cy="70" r="10" fill="#FFB3C1"/>
+                    <circle cx="150" cy="95" r="40" fill="#FFF2E8"/>
+                    <ellipse cx="160" cy="102" rx="12" ry="9" fill="#FFFFFF"/>
+                    <ellipse cx="162" cy="98" rx="4" ry="3" fill="#590D22"/>
+                    <path d="M145 90 Q153 82 160 90" stroke="#590D22" stroke-width="3" stroke-linecap="round" fill="none"/>
+                    <ellipse cx="168" cy="98" rx="6" ry="4" fill="#FF8FA3"/>
+
+                    <!-- Hugging Arms -->
+                    <path d="M85 115 C110 110, 130 110, 150 115 C140 130, 100 130, 85 115 Z" fill="#E6CCB2" stroke="#DDB892" stroke-width="2"/>
+                    <path d="M145 118 C125 112, 105 112, 85 118 C95 133, 135 133, 145 118 Z" fill="#FCEADE" stroke="#FFB3C1" stroke-width="2"/>
+
+                    <!-- Floating Heart -->
+                    <path d="M115 45 C115 45, 100 25, 85 38 C70 52, 115 80, 115 80 C115 80, 160 52, 145 38 C130 25, 115 45, 115 45 Z" fill="#FF4D6D"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- CARD 0: WELCOME INTRO CARD -->
+        <div id="cardIntro" class="glass-card rounded-3xl pt-10 p-6 sm:p-8 text-center shadow-2xl transition-all duration-500 animate-float">
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-pink-600 mb-3 tracking-wide">
+                Pesan Rahasia Spesial 💌
+            </h1>
+            
+            <p id="typewriterIntro" class="text-gray-700 text-sm sm:text-base font-medium min-h-[60px] leading-relaxed mb-6"></p>
+
+            <button id="btnStartPuzzle" class="w-full py-4 px-6 bg-gradient-to-r from-pink-500 to-rose-400 hover:from-pink-600 hover:to-rose-500 text-white font-bold rounded-2xl shadow-xl transform active:scale-95 transition duration-200 flex items-center justify-center space-x-2 text-base">
+                <span>Mulai Menyusun Puzzle Hati</span>
+                <span>🧩</span>
+            </button>
+        </div>
+
+        <!-- CARD 1: 2-PIECE MAGNETIC HEART PUZZLE CARD -->
+        <div id="cardPuzzle" class="glass-card rounded-3xl pt-10 p-5 sm:p-7 text-center shadow-2xl hidden transition-all duration-500">
+            <div class="mb-3">
+                <span class="bg-pink-100 text-pink-700 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider shadow-inner">
+                    Puzzle Hati Magnetik
+                </span>
+                <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mt-2">
+                    Satukan Hati yang Terpecah ✨
+                </h2>
+                <p class="text-xs text-gray-500 mt-1">
+                    Geser kepingan kiri dan kanan ke posisi yang pas!
+                </p>
+            </div>
+
+            <!-- Puzzle Target Box -->
+            <div class="relative w-64 h-64 mx-auto my-4 bg-pink-50/80 rounded-2xl border-2 border-dashed border-pink-300 flex items-center justify-center shadow-inner overflow-hidden">
+                <div id="puzzleBoard" class="relative w-56 h-56 flex items-center justify-center gap-1 p-2">
+                    <div data-slot="0" class="slot-box w-28 h-48 border-2 border-pink-200/80 rounded-l-full bg-pink-100/40 flex items-center justify-center transition overflow-hidden"></div>
+                    <div data-slot="1" class="slot-box w-28 h-48 border-2 border-pink-200/80 rounded-r-full bg-pink-100/40 flex items-center justify-center transition overflow-hidden"></div>
+                </div>
+
+                <!-- Complete Heart Overlay -->
+                <div id="completeHeart" class="absolute inset-0 flex items-center justify-center opacity-0 pointer-events-none transition-all duration-700 transform scale-50 z-40">
+                    <div class="heart-glow w-48 h-48">
+                        <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-2xl">
+                            <defs>
+                                <linearGradient id="goldHeartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#FF758F" />
+                                    <stop offset="50%" stop-color="#FF4D6D" />
+                                    <stop offset="100%" stop-color="#FFB703" />
+                                </linearGradient>
+                            </defs>
+                            <path d="M100 175 C100 175, 20 120, 20 65 C20 35, 45 15, 75 15 C92 15, 100 28, 100 28 C100 28, 108 15, 125 15 C155 15, 180 35, 180 65 C180 120, 100 175, 100 175 Z" fill="url(#goldHeartGrad)" stroke="#FFFFFF" stroke-width="4"/>
+                            <path d="M50 45 C60 30, 80 30, 85 45" stroke="rgba(255,255,255,0.7)" stroke-width="5" stroke-linecap="round" fill="none"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Puzzle Pieces Tray -->
+            <div id="puzzleTray" class="w-full min-h-[110px] bg-white/70 rounded-2xl p-3 border border-pink-200 flex items-center justify-around gap-4 shadow-sm"></div>
+
+            <div id="puzzleSuccessBanner" class="hidden mt-3 p-3 bg-emerald-100 border border-emerald-300 rounded-xl text-emerald-800 text-xs sm:text-sm font-bold animate-bounce">
+                🎉 Hati Menyatu! Memutar TULUS - Jatuh Suka... 🎵
+            </div>
+
+            <button id="btnToLetter" class="hidden w-full mt-4 py-3.5 bg-gradient-to-r from-pink-500 to-rose-400 hover:from-pink-600 hover:to-rose-500 text-white font-extrabold rounded-2xl shadow-xl transition duration-200 transform active:scale-95">
+                Buka Surat Cinta 💌
+            </button>
+        </div>
+
+        <!-- CARD 2: 5-PART SEQUENTIAL LOVE LETTER CARD -->
+        <div id="cardLetter" class="glass-card rounded-3xl pt-10 p-6 sm:p-8 text-center shadow-2xl hidden transition-all duration-500">
+            <div class="mb-4 min-h-[120px] flex items-center justify-center p-2">
+                <p id="typewriterLetter" class="text-gray-800 text-base sm:text-lg font-semibold leading-relaxed"></p>
+            </div>
+
+            <div id="letterNavControls" class="mt-4">
+                <button id="btnNextPart" class="w-full py-3.5 bg-gradient-to-r from-pink-500 to-rose-400 hover:from-pink-600 hover:to-rose-500 text-white font-extrabold text-base rounded-2xl shadow-lg transform active:scale-95 transition duration-200 flex items-center justify-center space-x-2">
+                    <span>Lanjut Pesan</span>
+                    <span>❤️</span>
+                </button>
+            </div>
+
+            <div id="proposalChoices" class="hidden relative min-h-[80px] flex items-center justify-center gap-4 mt-6">
+                <button id="btnYes" class="px-8 py-3.5 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-extrabold text-lg rounded-2xl shadow-xl transform active:scale-95 transition-all duration-200 z-10">
+                    Iya 💖
+                </button>
+
+                <button id="btnNo" class="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-600 font-bold text-base rounded-2xl shadow transition-all duration-150 z-20 absolute">
+                    Tidak 💔
+                </button>
+            </div>
+        </div>
+
+        <!-- CARD 3: CELEBRATION CARD -->
+        <div id="cardCelebration" class="glass-card rounded-3xl pt-10 p-6 sm:p-8 text-center shadow-2xl hidden transition-all duration-500">
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-pink-600 mb-3">
+                AKU JUGA SAYANG KAMU! 💖🎉
+            </h2>
+
+            <p id="typewriterCelebration" class="text-gray-700 text-sm sm:text-base font-medium mb-6 leading-relaxed"></p>
+
+            <a id="btnWhatsApp" href="#" target="_blank" class="w-full py-4 px-6 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-base rounded-2xl shadow-xl flex items-center justify-center space-x-3 transform active:scale-95 transition duration-200">
+                <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+                </svg>
+                <span>Kirim Jawaban ke WhatsApp 💬❤️</span>
+            </a>
+        </div>
+
+    </main>
+
+    <script>
+        // Deklarasi Variabel Utama di Paling Atas (Mencegah Dead Zone Error)
+        let isAudioPlaying = false;
+        let isAudioUnlocked = false;
+        let snappedCount = 0;
+        let isPuzzleDone = false;
+        let isTyping = false;
+        let typeTimeout = null;
+        let currentFullText = "";
+        let currentPartIndex = 0;
+        let particles = [];
+
+        const bgAudio = document.getElementById('bgAudio');
+        const toggleAudioBtn = document.getElementById('toggleAudioBtn');
+        const musicDisc = document.getElementById('musicDisc');
+
+        const cardIntro = document.getElementById('cardIntro');
+        const cardPuzzle = document.getElementById('cardPuzzle');
+        const cardLetter = document.getElementById('cardLetter');
+        const cardCelebration = document.getElementById('cardCelebration');
+
+        const btnStartPuzzle = document.getElementById('btnStartPuzzle');
+        const btnToLetter = document.getElementById('btnToLetter');
+        const btnNextPart = document.getElementById('btnNextPart');
+        const letterNavControls = document.getElementById('letterNavControls');
+        const proposalChoices = document.getElementById('proposalChoices');
+        const btnYes = document.getElementById('btnYes');
+        const btnNo = document.getElementById('btnNo');
+        const btnWhatsApp = document.getElementById('btnWhatsApp');
+
+        const bearSoloSvg = document.getElementById('bearSoloSvg');
+        const bearHugSvg = document.getElementById('bearHugSvg');
+        const bearSpeechBubble = document.getElementById('bearSpeechBubble');
+        const bearSpeechText = document.getElementById('bearSpeechText');
+
+        function unlockAudioContext() {
+            if (isAudioUnlocked) return;
+            isAudioUnlocked = true;
+            if (bgAudio) {
+                try {
+                    const promise = bgAudio.play();
+                    if (promise !== undefined) {
+                        promise.then(() => {
+                            if (!isPuzzleDone) {
+                                bgAudio.pause();
+                                bgAudio.currentTime = 0;
+                            } else {
+                                isAudioPlaying = true;
+                                if (toggleAudioBtn) toggleAudioBtn.innerText = "⏸️ Pause";
+                                if (musicDisc) musicDisc.classList.add('animate-spin');
+                            }
+                        }).catch(e => { console.log("Audio unlock tap wait:", e); });
+                    }
+                } catch(e) { console.log("Audio error:", e); }
+            }
+            window.removeEventListener('pointerdown', unlockAudioContext);
+        }
+        window.addEventListener('pointerdown', unlockAudioContext);
+
+        function playMusic() {
+            if (!bgAudio) return;
+            try {
+                const promise = bgAudio.play();
+                if (promise !== undefined) {
+                    promise.then(() => {
+                        isAudioPlaying = true;
+                        if (toggleAudioBtn) toggleAudioBtn.innerText = "⏸️ Pause";
+                        if (musicDisc) musicDisc.classList.add('animate-spin');
+                    }).catch(err => { console.log("Autoplay wait:", err); });
+                }
+            } catch(e) { console.log("Play music error:", e); }
+        }
+
+        function pauseMusic() {
+            if (!bgAudio) return;
+            try { bgAudio.pause(); } catch(e) {}
+            isAudioPlaying = false;
+            if (toggleAudioBtn) toggleAudioBtn.innerText = "▶️ Play";
+            if (musicDisc) musicDisc.classList.remove('animate-spin');
+        }
+
+        if (toggleAudioBtn) {
+            toggleAudioBtn.addEventListener('click', () => {
+                if (isAudioPlaying) pauseMusic();
+                else playMusic();
+            });
+        }
+
+        function typeWriter(elementId, text, speed = 30, callback = null) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            if (typeTimeout) clearTimeout(typeTimeout);
+            
+            el.innerHTML = "";
+            isTyping = true;
+            currentFullText = text;
+            let i = 0;
+
+            function type() {
+                if (i < text.length) {
+                    el.innerHTML += text.charAt(i);
+                    if (Math.random() < 0.22) {
+                        createSparkleNearElement(el);
+                    }
+                    i++;
+                    typeTimeout = setTimeout(type, speed);
+                } else {
+                    isTyping = false;
+                    if (callback) callback();
+                }
+            }
+            type();
+        }
+
+        function forceCompleteTypewriter(elementId) {
+            if (typeTimeout) clearTimeout(typeTimeout);
+            const el = document.getElementById(elementId);
+            if (el) el.innerHTML = currentFullText;
+            isTyping = false;
+        }
+
+        function createSparkleNearElement(el) {
+            if (!el) return;
+            const rect = el.getBoundingClientRect();
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle-particle';
+            const size = Math.random() * 10 + 6;
+            sparkle.style.width = `${size}px`;
+            sparkle.style.height = `${size}px`;
+            sparkle.style.left = `${rect.left + Math.random() * rect.width}px`;
+            sparkle.style.top = `${rect.top + Math.random() * rect.height}px`;
+            document.body.appendChild(sparkle);
+
+            setTimeout(() => sparkle.remove(), 800);
+        }
+
+        // Teks Pembuka
+        typeWriter('typewriterIntro', 'Hai manis... Ada pesan cinta spesial yang tersembunyi. Satukan puzzle hatinya dulu untuk menyimaknya ya! ✨');
+
+        // Navigasi ke Card Puzzle saat Tombol Ditekan
+        if (btnStartPuzzle) {
+            btnStartPuzzle.addEventListener('click', (e) => {
+                e.preventDefault();
+                unlockAudioContext();
+                if (cardIntro) cardIntro.classList.add('hidden');
+                if (cardPuzzle) cardPuzzle.classList.remove('hidden');
+                init2PiecePuzzleEngine();
+            });
+        }
+
+        const puzzleSvgPieces = [
+            `<svg viewBox="0 0 100 200" class="w-full h-full pointer-events-none"><path d="M 100 180 C 100 180, 10 120, 10 65 C 10 30, 40 10, 75 10 C 95 10, 100 25, 100 25 Z" fill="#FF758F" stroke="#FFF" stroke-width="4"/></svg>`,
+            `<svg viewBox="0 0 100 200" class="w-full h-full pointer-events-none"><path d="M 0 25 C 0 25, 5 10, 25 10 C 60 10, 90 30, 90 65 C 90 120, 0 180, 0 180 Z" fill="#FF4D6D" stroke="#FFF" stroke-width="4"/></svg>`
+        ];
+
+        function init2PiecePuzzleEngine() {
+            const tray = document.getElementById('puzzleTray');
+            if (!tray) return;
+            tray.innerHTML = "";
+            snappedCount = 0;
+            isPuzzleDone = false;
+
+            document.querySelectorAll('.slot-box').forEach(slot => {
+                slot.innerHTML = '';
+                slot.classList.remove('bg-pink-300/50', 'border-pink-400');
+            });
+
+            const indices = [0, 1].sort(() => Math.random() - 0.5);
+
+            indices.forEach((pieceIdx) => {
+                const pieceEl = document.createElement('div');
+                pieceEl.className = 'puzzle-piece-container w-20 h-36 cursor-grab active:cursor-grabbing transform transition-transform duration-150 z-30 touch-none select-none';
+                pieceEl.dataset.piece = pieceIdx;
+                pieceEl.innerHTML = puzzleSvgPieces[pieceIdx];
+
+                tray.appendChild(pieceEl);
+                makePieceDraggable(pieceEl);
+            });
+        }
+
+        function makePieceDraggable(piece) {
+            let isDragging = false;
+            let startX = 0, startY = 0;
+            let currentX = 0, currentY = 0;
+
+            piece.addEventListener('pointerdown', (e) => {
+                if (piece.dataset.snapped === 'true') return;
+                unlockAudioContext();
+                isDragging = true;
+                try { piece.setPointerCapture(e.pointerId); } catch(err) {}
+                piece.style.zIndex = '100';
+
+                startX = e.clientX - currentX;
+                startY = e.clientY - currentY;
+            });
+
+            piece.addEventListener('pointermove', (e) => {
+                if (!isDragging) return;
+                currentX = e.clientX - startX;
+                currentY = e.clientY - startY;
+                piece.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) scale(1.12)`;
+            });
+
+            const onPointerEnd = (e) => {
+                if (!isDragging) return;
+                isDragging = false;
+                piece.style.zIndex = '30';
+
+                const targetSlot = document.querySelector(`.slot-box[data-slot="${piece.dataset.piece}"]`);
+                if (!targetSlot) return;
+
+                const slotRect = targetSlot.getBoundingClientRect();
+                const pieceRect = piece.getBoundingClientRect();
+
+                const pieceCenter = {
+                    x: pieceRect.left + pieceRect.width / 2,
+                    y: pieceRect.top + pieceRect.height / 2
+                };
+                const slotCenter = {
+                    x: slotRect.left + slotRect.width / 2,
+                    y: slotRect.top + slotRect.height / 2
+                };
+
+                const dist = Math.hypot(pieceCenter.x - slotCenter.x, pieceCenter.y - slotCenter.y);
+
+                if (dist < 80) {
+                    piece.dataset.snapped = 'true';
+                    piece.style.pointerEvents = 'none';
+
+                    targetSlot.appendChild(piece);
+                    piece.style.transform = `translate3d(0, 0, 0) scale(1)`;
+                    targetSlot.classList.add('bg-pink-300/50', 'border-pink-400');
+
+                    snappedCount++;
+                    createSparkleExplosion(slotCenter.x, slotCenter.y);
+
+                    if (snappedCount === 2) {
+                        onPuzzleCompleted();
+                    }
+                } else {
+                    piece.classList.add('animate-shake');
+                    setTimeout(() => {
+                        piece.classList.remove('animate-shake');
+                        currentX = 0;
+                        currentY = 0;
+                        piece.style.transform = `translate3d(0, 0, 0) scale(1)`;
+                    }, 400);
+                }
+            };
+
+            piece.addEventListener('pointerup', onPointerEnd);
+            piece.addEventListener('pointercancel', onPointerEnd);
+        }
+
+        function onPuzzleCompleted() {
+            isPuzzleDone = true;
+            const completeHeart = document.getElementById('completeHeart');
+            if (completeHeart) {
+                completeHeart.classList.remove('opacity-0', 'scale-50');
+                completeHeart.classList.add('opacity-100', 'scale-100');
+            }
+
+            playMusic();
+            triggerSakuraBurst();
+
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 100,
+                    spread: 90,
+                    origin: { y: 0.6 },
+                    colors: ['#ff4d6d', '#ffb3c1', '#ffd1dc', '#ffb703']
+                });
+            }
+
+            const banner = document.getElementById('puzzleSuccessBanner');
+            if (banner) banner.classList.remove('hidden');
+            if (btnToLetter) btnToLetter.classList.remove('hidden');
+        }
+
+        if (btnToLetter) {
+            btnToLetter.addEventListener('click', () => {
+                triggerSakuraBurst();
+                if (cardPuzzle) cardPuzzle.classList.add('hidden');
+                if (cardLetter) cardLetter.classList.remove('hidden');
+                showLetterPart(0);
+            });
+        }
+
+        const letterParts = [
+            "Halo! Makasih ya udah mau nyelesaiin puzzle tadi. Kalau puzzle hati yang terpecah aja bisa disatuin lagi, semoga hati kita juga gitu ya.",
+            "Sebenarnya aku udah lumayan lama mendam ini. Sejak kita makin sering ngobrol, ada rasa yang pelan-pelan tumbuh dan beda aja rasanya tiap dekat kamu.",
+            "Aku suka gimana cara kamu senyum, hal-hal kecil yang kamu lakuin, dan kehadiran kamu yang selalu berhasil bikin hari-hari aku terasa lebih tenang dan seru.",
+            "Aku pengen terus ada di samping kamu, bukan cuma pas lagi seneng aja, tapi juga buat saling support dan nemenin kamu ke depannya.",
+            "Jadi lewat web sederhana ini... kamu mau gak jadi pacar aku?"
+        ];
+
+        function showLetterPart(index) {
+            currentPartIndex = index;
+            const text = letterParts[index];
+
+            if (index < 4) {
+                if (letterNavControls) letterNavControls.classList.remove('hidden');
+                if (proposalChoices) proposalChoices.classList.add('hidden');
+            } else {
+                if (letterNavControls) letterNavControls.classList.add('hidden');
+            }
+
+            typeWriter('typewriterLetter', text, 30, () => {
+                if (index === 4 && proposalChoices) {
+                    proposalChoices.classList.remove('hidden');
+                }
+            });
+        }
+
+        if (btnNextPart) {
+            btnNextPart.addEventListener('click', () => {
+                triggerSakuraBurst();
+                
+                if (isTyping) {
+                    forceCompleteTypewriter('typewriterLetter');
+                    if (currentPartIndex === 4) {
+                        if (proposalChoices) proposalChoices.classList.remove('hidden');
+                        if (letterNavControls) letterNavControls.classList.add('hidden');
+                    }
+                    return;
+                }
+
+                if (currentPartIndex < 4) {
+                    showLetterPart(currentPartIndex + 1);
+                }
+            });
+        }
+
+        const speechBubbleTexts = [
+            "Eits, gak bisa dipencet! 😜",
+            "Masa gak mau sih? 🥺",
+            "Tombolnya kabur terus kan! 😂",
+            "Pencet IYA aja dong! 💖",
+            "Hati ini sudah terkunci buat kamu! ✨"
+        ];
+
+        function moveNoButton() {
+            if (!cardLetter || !btnNo) return;
+            const container = cardLetter.getBoundingClientRect();
+            const btnRect = btnNo.getBoundingClientRect();
+
+            const maxX = container.width - btnRect.width - 30;
+            const maxY = container.height - btnRect.height - 30;
+
+            const randomX = Math.max(15, Math.floor(Math.random() * maxX) - container.width / 2 + btnRect.width);
+            const randomY = Math.max(-80, Math.floor(Math.random() * maxY) - container.height / 2);
+
+            btnNo.style.transform = `translate(${randomX}px, ${randomY}px)`;
+
+            if (bearSpeechText && bearSpeechBubble) {
+                const randomMsg = speechBubbleTexts[Math.floor(Math.random() * speechBubbleTexts.length)];
+                bearSpeechText.innerText = randomMsg;
+                bearSpeechBubble.classList.remove('opacity-0', 'scale-75');
+                bearSpeechBubble.classList.add('opacity-100', 'scale-100');
+
+                setTimeout(() => {
+                    bearSpeechBubble.classList.remove('opacity-100', 'scale-100');
+                    bearSpeechBubble.classList.add('opacity-0', 'scale-75');
+                }, 2000);
+            }
+        }
+
+        if (btnNo) {
+            btnNo.addEventListener('mouseover', moveNoButton);
+            btnNo.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                moveNoButton();
+            });
+        }
+
+        if (btnYes) {
+            btnYes.addEventListener('click', () => {
+                if (cardLetter) cardLetter.classList.add('hidden');
+                if (cardCelebration) cardCelebration.classList.remove('hidden');
+
+                if (bearSoloSvg) bearSoloSvg.classList.add('hidden');
+                if (bearHugSvg) bearHugSvg.classList.remove('hidden');
+
+                if (typeof confetti === 'function') {
+                    confetti({
+                        particleCount: 220,
+                        spread: 120,
+                        origin: { y: 0.5 },
+                        colors: ['#ff4d6d', '#ff8fa3', '#ffffff', '#ffd1dc', '#ffb703']
+                    });
+                }
+
+                typeWriter('typewriterCelebration', 'Makasih ya udah terima aku! Janji bakal bikin kamu bahagia dan nemenin kamu terus setiap hari! 🥰 Hati ini resmi milik kamu selamanya.');
+
+                const message = encodeURIComponent("Iya, aku terima kamu! ❤️ Momen di web tadi lucu banget, makasih ya!");
+                if (btnWhatsApp) btnWhatsApp.href = `https://wa.me/?text=${message}`;
+
+                if (typeof google !== 'undefined' && google.script && google.script.run) {
+                    google.script.run.simpanJawaban('Diterima! ❤️');
+                }
+            });
+        }
+
+        function createSparkleExplosion(x, y) {
+            for (let i = 0; i < 10; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle-particle';
+                sparkle.style.left = `${x}px`;
+                sparkle.style.top = `${y}px`;
+                sparkle.style.width = `10px`;
+                sparkle.style.height = `10px`;
+                document.body.appendChild(sparkle);
+                setTimeout(() => sparkle.remove(), 800);
+            }
+        }
+
+        function triggerSakuraBurst() {
+            for (let i = 0; i < 15; i++) {
+                particles.push(new Particle(true));
+            }
+        }
+
+        const canvas = document.getElementById('sakuraCanvas');
+        const ctx = canvas ? canvas.getContext('2d') : null;
+
+        function resizeCanvas() {
+            if (!canvas) return;
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor(burst = false) {
+                this.reset(burst);
+            }
+
+            reset(burst = false) {
+                const cWidth = canvas ? canvas.width : window.innerWidth;
+                const cHeight = canvas ? canvas.height : window.innerHeight;
+                this.x = burst ? cWidth / 2 + (Math.random() * 200 - 100) : Math.random() * cWidth;
+                this.y = burst ? cHeight / 2 + (Math.random() * 200 - 100) : Math.random() * cHeight - cHeight;
+                this.size = Math.random() * 10 + 6;
+                this.speedY = burst ? (Math.random() * -3 - 1) : (Math.random() * 1.5 + 0.8);
+                this.speedX = Math.random() * 2 - 1;
+                this.opacity = Math.random() * 0.7 + 0.3;
+                this.rotation = Math.random() * 360;
+                this.spin = Math.random() * 2 - 1;
+                this.isHeart = Math.random() < 0.35;
+            }
+
+            update() {
+                const cWidth = canvas ? canvas.width : window.innerWidth;
+                const cHeight = canvas ? canvas.height : window.innerHeight;
+                this.y += this.speedY;
+                this.x += this.speedX + Math.sin(this.y * 0.01) * 0.5;
+                this.rotation += this.spin;
+
+                if (this.y > cHeight || this.y < -100) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                if (!ctx) return;
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate((this.rotation * Math.PI) / 180);
+                ctx.globalAlpha = this.opacity;
+
+                if (this.isHeart) {
+                    ctx.fillStyle = '#FF4D6D';
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.bezierCurveTo(-this.size/2, -this.size/2, -this.size, this.size/3, 0, this.size);
+                    ctx.bezierCurveTo(this.size, this.size/3, this.size/2, -this.size/2, 0, 0);
+                    ctx.fill();
+                } else {
+                    ctx.fillStyle = '#FFB3C1';
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, this.size/2, this.size, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                ctx.restore();
+            }
+        }
+
+        for (let i = 0; i < 35; i++) {
+            particles.push(new Particle());
+        }
+
+        function animateCanvas() {
+            if (ctx && canvas) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+            }
+            requestAnimationFrame(animateCanvas);
+        }
+
+        window.onload = function() {
+            animateCanvas();
+        };
+    </script>
+</body>
+</html>
