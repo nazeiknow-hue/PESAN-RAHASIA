@@ -1,0 +1,1988 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TUAN ARESTU - Financial Audit & Mathematical Intelligence Engine v6.0</title>
+    
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        },
+                        navy: {
+                            800: '#0f172a',
+                            900: '#020617',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- FontAwesome 6 CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* Custom scrollbars and sleek UI adjustments */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .modal-backdrop {
+            background-color: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+        }
+    </style>
+</head>
+<body class="font-sans text-slate-900 bg-slate-50 antialiased h-full flex flex-col">
+
+    <!-- TOP EXECUTIVE NAVBAR -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <!-- Brand & Platform Name -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-brand-700 flex items-center justify-center text-white shadow-sm font-extrabold text-lg tracking-wider">
+                        TA
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <h1 class="text-lg font-bold text-slate-900 tracking-tight leading-tight">TUAN ARESTU</h1>
+                            <span class="bg-brand-50 text-brand-700 text-xs px-2 py-0.5 rounded-full font-semibold border border-brand-100">v6.0</span>
+                        </div>
+                        <p class="text-xs text-slate-500 font-medium">Financial & Mathematical Intelligence Engine</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <nav class="hidden lg:flex space-x-1 items-center">
+                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="tab-btn px-3 py-2 rounded-lg text-sm font-semibold transition-all flex items-center space-x-2 text-brand-700 bg-brand-50">
+                        <i class="fa-solid font-normal fa-chart-pie text-xs"></i>
+                        <span>Dashboard</span>
+                    </button>
+                    <button onclick="switchTab('forensics')" id="nav-forensics" class="tab-btn px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-shield-halved text-xs"></i>
+                        <span>Audit Forensik</span>
+                    </button>
+                    <button onclick="switchTab('ledger')" id="nav-ledger" class="tab-btn px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-book-journal-whills text-xs"></i>
+                        <span>Jurnal Umum</span>
+                    </button>
+                    <button onclick="switchTab('coa')" id="nav-coa" class="tab-btn px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-sitemap text-xs"></i>
+                        <span>Bagan Akun</span>
+                    </button>
+                    <button onclick="switchTab('balanceSheet')" id="nav-balanceSheet" class="tab-btn px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-scale-balanced text-xs"></i>
+                        <span>Neraca</span>
+                    </button>
+                    <button onclick="switchTab('incomeStatement')" id="nav-incomeStatement" class="tab-btn px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-file-invoice-dollar text-xs"></i>
+                        <span>Laba Rugi</span>
+                    </button>
+                    <button onclick="switchTab('aiAssistant')" id="nav-aiAssistant" class="tab-btn px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-brain text-xs text-brand-600"></i>
+                        <span>Asisten AI</span>
+                    </button>
+                    <button onclick="switchTab('auditTrail')" id="nav-auditTrail" class="tab-btn px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-list-check text-xs"></i>
+                        <span>Audit Log</span>
+                    </button>
+                </nav>
+
+                <!-- Quick Action Buttons -->
+                <div class="flex items-center space-x-2">
+                    <button onclick="openNewTransactionModal()" class="bg-brand-700 hover:bg-brand-800 text-white font-medium text-sm px-3.5 py-2 rounded-lg shadow-sm transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-plus text-xs"></i>
+                        <span class="hidden sm:inline">Jurnal Baru</span>
+                    </button>
+
+                    <div class="relative inline-block text-left">
+                        <button onclick="toggleSystemMenu()" class="p-2 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-100 border border-slate-200">
+                            <i class="fa-solid fa-ellipsis-vertical text-sm"></i>
+                        </button>
+                        <div id="systemDropdown" class="hidden absolute right-0 mt-2 w-56 rounded-xl bg-white shadow-lg border border-slate-200 py-1 z-50">
+                            <button onclick="loadEnterpriseSeedData()" class="w-full text-left px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 flex items-center space-x-2 font-medium">
+                                <i class="fa-solid fa-database text-brand-600 w-4"></i>
+                                <span>Muat Data Simulasi</span>
+                            </button>
+                            <button onclick="exportAuditReportCSV()" class="w-full text-left px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 flex items-center space-x-2 font-medium">
+                                <i class="fa-solid fa-file-csv text-emerald-600 w-4"></i>
+                                <span>Ekspor General Ledger (CSV)</span>
+                            </button>
+                            <button onclick="exportAuditTrailJSON()" class="w-full text-left px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 flex items-center space-x-2 font-medium">
+                                <i class="fa-solid fa-code text-indigo-600 w-4"></i>
+                                <span>Ekspor System Logs (JSON)</span>
+                            </button>
+                            <div class="border-t border-slate-100 my-1"></div>
+                            <button onclick="openPurgeModal()" class="w-full text-left px-4 py-2.5 text-xs text-rose-600 hover:bg-rose-50 flex items-center space-x-2 font-medium">
+                                <i class="fa-solid fa-triangle-exclamation text-rose-600 w-4"></i>
+                                <span>Purge System Data</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Nav Bar (Horizontal Scroll) -->
+        <div class="lg:hidden bg-slate-50 border-t border-slate-200 overflow-x-auto px-4 py-2 flex space-x-2">
+            <button onclick="switchTab('dashboard')" class="mobile-tab-btn px-3 py-1.5 rounded-md text-xs font-semibold whitespace-nowrap bg-brand-700 text-white">Dashboard</button>
+            <button onclick="switchTab('forensics')" class="mobile-tab-btn px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap bg-white text-slate-700 border border-slate-200">Audit Forensik</button>
+            <button onclick="switchTab('ledger')" class="mobile-tab-btn px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap bg-white text-slate-700 border border-slate-200">Jurnal Umum</button>
+            <button onclick="switchTab('coa')" class="mobile-tab-btn px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap bg-white text-slate-700 border border-slate-200">Bagan Akun</button>
+            <button onclick="switchTab('balanceSheet')" class="mobile-tab-btn px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap bg-white text-slate-700 border border-slate-200">Neraca</button>
+            <button onclick="switchTab('incomeStatement')" class="mobile-tab-btn px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap bg-white text-slate-700 border border-slate-200">Laba Rugi</button>
+            <button onclick="switchTab('aiAssistant')" class="mobile-tab-btn px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap bg-white text-slate-700 border border-slate-200">Asisten AI</button>
+            <button onclick="switchTab('auditTrail')" class="mobile-tab-btn px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap bg-white text-slate-700 border border-slate-200">Audit Log</button>
+        </div>
+    </header>
+
+    <!-- MAIN APPLICATION CONTAINER -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+        <!-- GLOBAL ALERT BANNER -->
+        <div id="systemNotificationBanner" class="hidden rounded-xl border border-amber-200 bg-amber-50 p-4 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <i class="fa-solid fa-triangle-exclamation text-amber-600 text-lg"></i>
+                <span id="systemNotificationText" class="text-xs sm:text-sm font-medium text-amber-900">Peringatan Audit Forensik: Ditemukan entri jurnal yang berpotensi memicu indikator risiko tinggi.</span>
+            </div>
+            <button onclick="dismissNotification()" class="text-amber-700 hover:text-amber-900 text-xs font-bold px-2 py-1">Tutup</button>
+        </div>
+
+        <!-- TAB 1: EXECUTIVE DASHBOARD OVERVIEW -->
+        <section id="tab-dashboard-content" class="tab-content space-y-6">
+            <!-- Executive KPI Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Card 1: Total Aset -->
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Aset</span>
+                        <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                            <i class="fa-solid fa-vault text-sm"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <div id="kpiTotalAssets" class="text-2xl font-extrabold text-slate-900 font-mono">Rp 0</div>
+                        <p id="kpiAssetSub" class="text-xs text-slate-500 mt-1 flex items-center space-x-1">
+                            <span class="text-emerald-600 font-semibold"><i class="fa-solid fa-check"></i> Verifikasi COA</span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 2: Likuiditas Kas -->
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Kas & Setara Kas</span>
+                        <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+                            <i class="fa-solid fa-wallet text-sm"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <div id="kpiTotalCash" class="text-2xl font-extrabold text-slate-900 font-mono">Rp 0</div>
+                        <p id="kpiLiquiditySub" class="text-xs text-slate-500 mt-1">Rasio Kas: <span id="kpiCashRatio" class="font-bold text-slate-800">0.0x</span></p>
+                    </div>
+                </div>
+
+                <!-- Card 3: Laba Bersih -->
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Laba / (Rugi) Bersih</span>
+                        <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                            <i class="fa-solid fa-chart-line text-sm"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <div id="kpiNetProfit" class="text-2xl font-extrabold text-slate-900 font-mono">Rp 0</div>
+                        <p id="kpiProfitMarginSub" class="text-xs text-slate-500 mt-1">Margin Bersih: <span id="kpiProfitMargin" class="font-bold text-slate-800">0%</span></p>
+                    </div>
+                </div>
+
+                <!-- Card 4: Skor Risiko Audit -->
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Skor Kepatuhan Audit</span>
+                        <div id="kpiAuditStatusIcon" class="w-8 h-8 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center">
+                            <i class="fa-solid fa-shield-check text-sm"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <div class="flex items-baseline space-x-2">
+                            <span id="kpiAuditScore" class="text-2xl font-extrabold text-slate-900 font-mono">100%</span>
+                            <span id="kpiAuditBadge" class="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">OPTIMAL</span>
+                        </div>
+                        <p id="kpiAuditRuleSub" class="text-xs text-slate-500 mt-1"><span id="kpiFlaggedCount" class="font-bold text-slate-800">0</span> Anomali Terdeteksi</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Charts Grid (4 Interactive Canvas Charts) -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Chart 1: Liquidity Trend -->
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-900">Tren Likuiditas Kas</h3>
+                            <p class="text-xs text-slate-500">Pergerakan Saldo Kas Per Periode</p>
+                        </div>
+                        <span class="text-xs font-mono font-medium text-slate-400">Chart 01</span>
+                    </div>
+                    <div class="h-64 relative">
+                        <canvas id="liquidityChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 2: Revenue vs Expenses -->
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-900">Komparasi Pendapatan vs Beban</h3>
+                            <p class="text-xs text-slate-500">Evaluasi Efisiensi Operasional</p>
+                        </div>
+                        <span class="text-xs font-mono font-medium text-slate-400">Chart 02</span>
+                    </div>
+                    <div class="h-64 relative">
+                        <canvas id="revExpChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 3: Expense Breakdown -->
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-900">Distribusi Beban Operasional</h3>
+                            <p class="text-xs text-slate-500">Proporsi Pengeluaran Menurut Kategori</p>
+                        </div>
+                        <span class="text-xs font-mono font-medium text-slate-400">Chart 03</span>
+                    </div>
+                    <div class="h-64 relative">
+                        <canvas id="expensePieChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 4: Forensic Risk Radar -->
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-900">Radar Profil Risiko Audit Forensik</h3>
+                            <p class="text-xs text-slate-500">Evaluasi Multidimensional Parameter Anomali</p>
+                        </div>
+                        <span class="text-xs font-mono font-medium text-slate-400">Chart 04</span>
+                    </div>
+                    <div class="h-64 relative">
+                        <canvas id="radarRiskChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: AUDIT FORENSIK DIAGNOSTIC ENGINE (AR-001 to AR-008) -->
+        <section id="tab-forensics-content" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-900">Mesin Audit Forensik & Aturan Diagostik (AR-001 s/d AR-008)</h2>
+                        <p class="text-xs text-slate-500">Pemindaian otomatis integritas pembukuan, fraud, dan anomali akun terstruktur</p>
+                    </div>
+                    <button onclick="runForensicEngineScan()" class="bg-brand-700 hover:bg-brand-800 text-white text-xs font-semibold px-4 py-2.5 rounded-lg transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-rotate text-xs"></i>
+                        <span>Jalankan Pemindaian Ulang</span>
+                    </button>
+                </div>
+
+                <!-- Diagnostic Rules Status Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6" id="forensicRulesGrid">
+                    <!-- Rule cards generated dynamically via JS -->
+                </div>
+            </div>
+
+            <!-- Anomaly Log Details -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-sm font-bold text-slate-900">Detail Anomali & Transaksi Berisiko Terdeteksi</h3>
+                    <span id="detectedAnomaliesBadge" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-700">0 Temuan</span>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200">
+                                <th class="py-3 px-4">Aturan / ID</th>
+                                <th class="py-3 px-4">Tanggal / Ref</th>
+                                <th class="py-3 px-4">Uraian Transaksi</th>
+                                <th class="py-3 px-4 text-right">Nominal</th>
+                                <th class="py-3 px-4 text-center">Tingkat Risiko</th>
+                                <th class="py-3 px-4">Rekomendasi Audit</th>
+                            </tr>
+                        </thead>
+                        <tbody id="forensicAnomalyTableBody" class="text-xs divide-y divide-slate-100">
+                            <!-- Dynamic anomaly rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: GENERAL LEDGER (JURNAL UMUM) -->
+        <section id="tab-ledger-content" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-900">Jurnal Umum (General Ledger)</h2>
+                        <p class="text-xs text-slate-500">Buku catatan transaksi double-entry terverifikasi dengan penandaan integritas</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="openNewTransactionModal()" class="bg-brand-700 hover:bg-brand-800 text-white text-xs font-semibold px-3.5 py-2 rounded-lg flex items-center space-x-2">
+                            <i class="fa-solid fa-plus text-xs"></i>
+                            <span>Tambah Transaksi</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Search & Filters -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div class="relative">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i>
+                        <input type="text" id="ledgerSearchInput" oninput="renderGeneralLedgerTable()" placeholder="Cari ref, uraian, nominal..." class="w-full pl-9 pr-3 py-2 text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 bg-slate-50">
+                    </div>
+
+                    <div>
+                        <select id="ledgerAccountFilter" onchange="renderGeneralLedgerTable()" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 bg-slate-50">
+                            <option value="">Semua Akun Buku Besar</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <select id="ledgerStatusFilter" onchange="renderGeneralLedgerTable()" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 bg-slate-50">
+                            <option value="">Semua Status Audit</option>
+                            <option value="verified">Terverifikasi (Clear)</option>
+                            <option value="flagged">Flagged Anomali</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Ledger Table -->
+                <div class="overflow-x-auto rounded-xl border border-slate-200">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 text-[11px] font-bold text-slate-600 uppercase tracking-wider border-b border-slate-200">
+                                <th class="py-3 px-4">Tanggal</th>
+                                <th class="py-3 px-4">No. Ref</th>
+                                <th class="py-3 px-4">Uraian Transaksi</th>
+                                <th class="py-3 px-4">Akun Debit</th>
+                                <th class="py-3 px-4">Akun Kredit</th>
+                                <th class="py-3 px-4 text-right">Nominal (Rp)</th>
+                                <th class="py-3 px-4 text-center">Status Audit</th>
+                                <th class="py-3 px-4 text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ledgerTableBody" class="text-xs divide-y divide-slate-100 bg-white">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: CHART OF ACCOUNTS (BAGAN AKUN) -->
+        <section id="tab-coa-content" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-900">Bagan Akun (Chart of Accounts - COA)</h2>
+                        <p class="text-xs text-slate-500">Struktur hierarki penggolongan akun standar akuntansi enterprise</p>
+                    </div>
+                    <button onclick="openAddAccountModal()" class="bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold px-3.5 py-2 rounded-lg flex items-center space-x-2">
+                        <i class="fa-solid fa-folder-plus text-xs"></i>
+                        <span>Tambah Akun Baru</span>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                    <button onclick="filterCOAType('all')" class="coa-tab active p-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 text-xs font-bold text-left">
+                        Semua Kategori (<span id="countCoaAll">0</span>)
+                    </button>
+                    <button onclick="filterCOAType('asset')" class="coa-tab p-3 rounded-xl border border-slate-200 bg-white text-slate-600 text-xs font-semibold text-left hover:bg-slate-50">
+                        Aset / Aktiva (<span id="countCoaAsset">0</span>)
+                    </button>
+                    <button onclick="filterCOAType('liability')" class="coa-tab p-3 rounded-xl border border-slate-200 bg-white text-slate-600 text-xs font-semibold text-left hover:bg-slate-50">
+                        Kewajiban (<span id="countCoaLiability">0</span>)
+                    </button>
+                    <button onclick="filterCOAType('equity')" class="coa-tab p-3 rounded-xl border border-slate-200 bg-white text-slate-600 text-xs font-semibold text-left hover:bg-slate-50">
+                        Ekuitas (<span id="countCoaEquity">0</span>)
+                    </button>
+                    <button onclick="filterCOAType('revenue_expense')" class="coa-tab p-3 rounded-xl border border-slate-200 bg-white text-slate-600 text-xs font-semibold text-left hover:bg-slate-50">
+                        Pendapatan & Beban (<span id="countCoaRevExp">0</span>)
+                    </button>
+                </div>
+
+                <!-- COA List Table -->
+                <div class="overflow-x-auto rounded-xl border border-slate-200">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 text-[11px] font-bold text-slate-600 uppercase tracking-wider border-b border-slate-200">
+                                <th class="py-3 px-4">Kode Akun</th>
+                                <th class="py-3 px-4">Nama Akun</th>
+                                <th class="py-3 px-4">Kategori Utama</th>
+                                <th class="py-3 px-4">Pos Normal</th>
+                                <th class="py-3 px-4 text-right">Saldo Terkini</th>
+                            </tr>
+                        </thead>
+                        <tbody id="coaTableBody" class="text-xs divide-y divide-slate-100 bg-white">
+                            <!-- Dynamic COA entries -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: BALANCE SHEET (NERACA KEUANGAN) -->
+        <section id="tab-balanceSheet-content" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-6">
+                <!-- Balance Sheet Header & Dynamic Equation Status -->
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-900">Laporan Neraca Keuangan (Balance Sheet)</h2>
+                        <p class="text-xs text-slate-500">Konformitas Persamaan Dasar Akuntansi: Aktiva = Pasiva (Kewajiban + Ekuitas)</p>
+                    </div>
+                    <div id="equationStatusBadge" class="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold">
+                        <i class="fa-solid fa-circle-check text-emerald-600"></i>
+                        <span>PERSAMAAN SEIMBANG (BALANCED)</span>
+                    </div>
+                </div>
+
+                <!-- Double Column Balance Sheet -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- LEFT COLUMN: AKTIVA (ASSETS) -->
+                    <div class="space-y-4">
+                        <div class="bg-slate-900 text-white p-3 rounded-xl flex items-center justify-between font-bold text-sm">
+                            <span>AKTIVA (ASSETS)</span>
+                            <i class="fa-solid fa-building-columns text-slate-400"></i>
+                        </div>
+
+                        <!-- Current Assets -->
+                        <div class="space-y-2">
+                            <h4 class="text-xs font-extrabold text-slate-500 uppercase tracking-wider border-b border-slate-100 pb-1">Aset Lancar (Current Assets)</h4>
+                            <div id="bsCurrentAssetsList" class="space-y-1.5 text-xs">
+                                <!-- Dynamic items -->
+                            </div>
+                            <div class="flex justify-between items-center pt-2 font-bold text-xs text-slate-900 border-t border-slate-200">
+                                <span>Total Aset Lancar</span>
+                                <span id="bsTotalCurrentAssets" class="font-mono">Rp 0</span>
+                            </div>
+                        </div>
+
+                        <!-- Non-Current Assets -->
+                        <div class="space-y-2 pt-2">
+                            <h4 class="text-xs font-extrabold text-slate-500 uppercase tracking-wider border-b border-slate-100 pb-1">Aset Tidak Lancar (Non-Current Assets)</h4>
+                            <div id="bsNonCurrentAssetsList" class="space-y-1.5 text-xs">
+                                <!-- Dynamic items -->
+                            </div>
+                            <div class="flex justify-between items-center pt-2 font-bold text-xs text-slate-900 border-t border-slate-200">
+                                <span>Total Aset Tidak Lancar</span>
+                                <span id="bsTotalNonCurrentAssets" class="font-mono">Rp 0</span>
+                            </div>
+                        </div>
+
+                        <!-- Total Assets Footer -->
+                        <div class="bg-brand-50 border border-brand-200 p-4 rounded-xl flex justify-between items-center font-extrabold text-sm text-brand-900 mt-4">
+                            <span>TOTAL AKTIVA</span>
+                            <span id="bsGrandTotalAssets" class="font-mono text-base">Rp 0</span>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT COLUMN: PASIVA (LIABILITIES & EQUITY) -->
+                    <div class="space-y-4">
+                        <div class="bg-slate-900 text-white p-3 rounded-xl flex items-center justify-between font-bold text-sm">
+                            <span>PASIVA (KEWAJIBAN & EKUITAS)</span>
+                            <i class="fa-solid fa-scale-unbalanced-flip text-slate-400"></i>
+                        </div>
+
+                        <!-- Liabilities -->
+                        <div class="space-y-2">
+                            <h4 class="text-xs font-extrabold text-slate-500 uppercase tracking-wider border-b border-slate-100 pb-1">Kewajiban / Liabilitas (Liabilities)</h4>
+                            <div id="bsLiabilitiesList" class="space-y-1.5 text-xs">
+                                <!-- Dynamic items -->
+                            </div>
+                            <div class="flex justify-between items-center pt-2 font-bold text-xs text-slate-900 border-t border-slate-200">
+                                <span>Total Kewajiban</span>
+                                <span id="bsTotalLiabilities" class="font-mono">Rp 0</span>
+                            </div>
+                        </div>
+
+                        <!-- Equity -->
+                        <div class="space-y-2 pt-2">
+                            <h4 class="text-xs font-extrabold text-slate-500 uppercase tracking-wider border-b border-slate-100 pb-1">Ekuitas Pemilik (Equity)</h4>
+                            <div id="bsEquityList" class="space-y-1.5 text-xs">
+                                <!-- Dynamic items -->
+                            </div>
+                            <div class="flex justify-between items-center text-xs text-slate-700">
+                                <span>Laba Bersih Berjalan (Retained Net Income)</span>
+                                <span id="bsRetainedEarnings" class="font-mono font-semibold">Rp 0</span>
+                            </div>
+                            <div class="flex justify-between items-center pt-2 font-bold text-xs text-slate-900 border-t border-slate-200">
+                                <span>Total Ekuitas</span>
+                                <span id="bsTotalEquity" class="font-mono">Rp 0</span>
+                            </div>
+                        </div>
+
+                        <!-- Total Liabilities + Equity Footer -->
+                        <div class="bg-brand-50 border border-brand-200 p-4 rounded-xl flex justify-between items-center font-extrabold text-sm text-brand-900 mt-4">
+                            <span>TOTAL PASIVA</span>
+                            <span id="bsGrandTotalPasiva" class="font-mono text-base">Rp 0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 6: INCOME STATEMENT (LABA RUGI) -->
+        <section id="tab-incomeStatement-content" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-6 max-w-4xl mx-auto">
+                <div class="border-b border-slate-100 pb-4 text-center">
+                    <h2 class="text-lg font-bold text-slate-900">Laporan Laba Rugi Komprehensif</h2>
+                    <p class="text-xs text-slate-500">Periode Berjalan - PT TUAN ARESTU ENTERPRISE</p>
+                </div>
+
+                <div class="space-y-6 text-xs">
+                    <!-- Revenue Section -->
+                    <div class="space-y-2">
+                        <h3 class="font-extrabold text-slate-900 uppercase tracking-wider bg-slate-50 p-2.5 rounded-lg border border-slate-200">1. Pendapatan Operasional (Revenues)</h3>
+                        <div id="isRevenuesList" class="space-y-1.5 px-2">
+                            <!-- Items -->
+                        </div>
+                        <div class="flex justify-between items-center p-2.5 font-bold text-slate-900 border-t border-slate-200">
+                            <span>Total Pendapatan Usaha</span>
+                            <span id="isTotalRevenue" class="font-mono text-sm">Rp 0</span>
+                        </div>
+                    </div>
+
+                    <!-- Expenses Section -->
+                    <div class="space-y-2">
+                        <h3 class="font-extrabold text-slate-900 uppercase tracking-wider bg-slate-50 p-2.5 rounded-lg border border-slate-200">2. Beban Operasional & Administrasi (Expenses)</h3>
+                        <div id="isExpensesList" class="space-y-1.5 px-2">
+                            <!-- Items -->
+                        </div>
+                        <div class="flex justify-between items-center p-2.5 font-bold text-slate-900 border-t border-slate-200">
+                            <span>Total Beban Usaha</span>
+                            <span id="isTotalExpenses" class="font-mono text-sm">Rp 0</span>
+                        </div>
+                    </div>
+
+                    <!-- Net Profit Summary Box -->
+                    <div id="isNetProfitContainer" class="p-5 rounded-2xl border bg-slate-900 text-white flex justify-between items-center font-extrabold">
+                        <div>
+                            <span class="text-xs text-slate-400 block font-normal uppercase tracking-wider">Hasil Akhir</span>
+                            <span class="text-base">LABA / (RUGI) BERSIH</span>
+                        </div>
+                        <span id="isNetProfitValue" class="text-2xl font-mono text-emerald-400">Rp 0</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 7: INTELLIGENT EXECUTIVE ASSISTANT AI -->
+        <section id="tab-aiAssistant-content" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-6">
+                <div class="flex items-center space-x-3 border-b border-slate-100 pb-4">
+                    <div class="w-10 h-10 rounded-xl bg-brand-700 text-white flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-brain text-lg"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-900">Intelligent Executive Audit Assistant & Math Engine</h2>
+                        <p class="text-xs text-slate-500">Analisis rasio keuangan real-time, evaluasi matematika kuantitatif, dan konsultasi strategis</p>
+                    </div>
+                </div>
+
+                <!-- Quick Query Chips -->
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="askAIQuery('Analisis lengkap posisi likuiditas dan rasio keuangan saat ini.')" class="bg-slate-100 hover:bg-brand-50 hover:text-brand-700 text-slate-700 text-xs px-3 py-1.5 rounded-full font-medium transition-all">
+                        <i class="fa-solid fa-chart-pie mr-1 text-slate-400"></i> Analisis Rasio Likuiditas
+                    </button>
+                    <button onclick="askAIQuery('Apakah ada anomali atau potensi fraud pada jurnal transaksi?')" class="bg-slate-100 hover:bg-brand-50 hover:text-brand-700 text-slate-700 text-xs px-3 py-1.5 rounded-full font-medium transition-all">
+                        <i class="fa-solid fa-shield-virus mr-1 text-slate-400"></i> Deteksi Fraud & Anomali
+                    </button>
+                    <button onclick="askAIQuery('Bagaimana penerapan Hukum Benford dalam audit forensik?')" class="bg-slate-100 hover:bg-brand-50 hover:text-brand-700 text-slate-700 text-xs px-3 py-1.5 rounded-full font-medium transition-all">
+                        <i class="fa-solid fa-square-root-variable mr-1 text-slate-400"></i> Rumus Hukum Benford
+                    </button>
+                    <button onclick="askAIQuery('Hitung 150000000 * (1 + 0.08)^5')" class="bg-slate-100 hover:bg-brand-50 hover:text-brand-700 text-slate-700 text-xs px-3 py-1.5 rounded-full font-medium transition-all">
+                        <i class="fa-solid fa-calculator mr-1 text-slate-400"></i> Hitung Bunga Majemuk
+                    </button>
+                </div>
+
+                <!-- Chat Messages Box -->
+                <div id="aiChatContainer" class="h-96 overflow-y-auto space-y-4 p-4 rounded-xl bg-slate-50 border border-slate-200">
+                    <div class="flex items-start space-x-3">
+                        <div class="w-8 h-8 rounded-lg bg-brand-700 text-white flex items-center justify-center shrink-0 text-xs font-bold">
+                            AI
+                        </div>
+                        <div class="bg-white p-4 rounded-2xl border border-slate-200 text-xs text-slate-800 space-y-2 max-w-2xl shadow-sm">
+                            <p class="font-semibold text-slate-900">Salam, Saya TUAN ARESTU v6.0.</p>
+                            <p>Asisten Eksekutif & Mesin Analisis Matematika, Statistik, Kalkulus, serta Akuntansi Forensik. Saya siap membantu Anda menganalisis data keuangan sistem, menyelesaikan persamaan matematika rumit, hingga berdiskusi mengenai strategi bisnis dan filosofi.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Box -->
+                <form onsubmit="handleAISubmit(event)" class="flex gap-2">
+                    <input type="text" id="aiQueryInput" placeholder="Ketik kueri analisis keuangan, matematika, atau pertanyaan umum..." class="flex-grow px-4 py-2.5 text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white shadow-sm">
+                    <button type="submit" class="bg-brand-700 hover:bg-brand-800 text-white px-5 py-2.5 rounded-xl text-xs font-semibold flex items-center space-x-2 transition-all shrink-0">
+                        <span>Kirim</span>
+                        <i class="fa-solid fa-paper-plane text-xs"></i>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- TAB 8: AUDIT TRAIL & SYSTEM LOGS -->
+        <section id="tab-auditTrail-content" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-900">Audit Trail & Integrity Logs</h2>
+                        <p class="text-xs text-slate-500">Pencatatan peristiwa sistem, pengubahan data, dan penandaan hash integritas kriptografis</p>
+                    </div>
+                    <button onclick="exportAuditTrailJSON()" class="bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold px-3.5 py-2 rounded-lg flex items-center space-x-2">
+                        <i class="fa-solid fa-download text-xs"></i>
+                        <span>Unduh JSON Logs</span>
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto rounded-xl border border-slate-200">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 text-[11px] font-bold text-slate-600 uppercase tracking-wider border-b border-slate-200">
+                                <th class="py-3 px-4">Waktu Log</th>
+                                <th class="py-3 px-4">Aksi / Peristiwa</th>
+                                <th class="py-3 px-4">Pengguna / Modul</th>
+                                <th class="py-3 px-4">Detail Aktivitas</th>
+                                <th class="py-3 px-4 font-mono">Integrity Hash</th>
+                            </tr>
+                        </thead>
+                        <tbody id="auditTrailTableBody" class="text-xs divide-y divide-slate-100 bg-white">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL 1: DOUBLE-ENTRY JOURNAL TRANSACTION WITH LIVE BALANCE SIMULATOR -->
+    <div id="newTransactionModal" class="hidden fixed inset-0 z-50 overflow-y-auto modal-backdrop flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full border border-slate-200 overflow-hidden transform transition-all">
+            <div class="bg-slate-900 text-white px-6 py-4 flex items-center justify-between">
+                <div>
+                    <h3 class="text-sm font-bold">Pencatatan Jurnal Umum Double-Entry</h3>
+                    <p class="text-[11px] text-slate-400">Perekaman berpasangan dengan Live Pre-Posting Balance Simulator</p>
+                </div>
+                <button onclick="closeNewTransactionModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <form id="newTransactionForm" onsubmit="handlePostTransaction(event)" class="p-6 space-y-4 text-xs">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Tanggal Transaksi</label>
+                        <input type="date" id="txDate" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 bg-slate-50">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Nomor Referensi / Bukti</label>
+                        <input type="text" id="txRef" placeholder="Contoh: BKM-2026-001" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 bg-slate-50">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Uraian Transaksi / Keterangan</label>
+                    <input type="text" id="txDescription" placeholder="Uraian rinci transaksi keuangan..." required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 bg-slate-50">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-xl bg-slate-50 border border-slate-200">
+                    <div>
+                        <label class="block font-bold text-slate-800 mb-1">Akun DEBIT (+)</label>
+                        <select id="txDebitAccount" onchange="updatePrePostingSimulator()" required class="w-full px-3 py-2 border border-slate-200 rounded-xl bg-white font-medium">
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block font-bold text-slate-800 mb-1">Akun KREDIT (-)</label>
+                        <select id="txCreditAccount" onchange="updatePrePostingSimulator()" required class="w-full px-3 py-2 border border-slate-200 rounded-xl bg-white font-medium">
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Nominal Transaksi (Rp)</label>
+                    <input type="number" id="txAmount" min="1" step="1" placeholder="Masukkan jumlah dalam Rupiah..." oninput="updatePrePostingSimulator()" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 font-mono text-sm">
+                </div>
+
+                <div class="p-4 rounded-xl border border-brand-200 bg-brand-50 space-y-2">
+                    <div class="flex items-center justify-between text-brand-900 font-bold border-b border-brand-200 pb-2">
+                        <span><i class="fa-solid fa-calculator mr-1"></i> Live Pre-Posting Balance Simulator</span>
+                        <span id="simBalanceStatus" class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold">DEBIT = KREDIT</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-[11px] text-slate-700">
+                        <div>
+                            <span class="block text-slate-500">Dampak Saldo Debit Baru:</span>
+                            <span id="simDebitNewBalance" class="font-mono font-bold text-slate-900">Rp 0</span>
+                        </div>
+                        <div>
+                            <span class="block text-slate-500">Dampak Saldo Kredit Baru:</span>
+                            <span id="simCreditNewBalance" class="font-mono font-bold text-slate-900">Rp 0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-3 pt-2 border-t border-slate-100">
+                    <button type="button" onclick="closeNewTransactionModal()" class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold">Batal</button>
+                    <button type="submit" id="btnSubmitTx" class="bg-brand-700 hover:bg-brand-800 text-white font-semibold px-5 py-2 rounded-xl transition-all">Posting Transaksi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 2: ADD NEW ACCOUNT TO COA -->
+    <div id="addAccountModal" class="hidden fixed inset-0 z-50 overflow-y-auto modal-backdrop flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full border border-slate-200 overflow-hidden">
+            <div class="bg-slate-900 text-white px-6 py-4 flex items-center justify-between">
+                <h3 class="text-sm font-bold">Tambah Akun Baru ke COA</h3>
+                <button onclick="closeAddAccountModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form onsubmit="handleAddAccountSubmit(event)" class="p-6 space-y-4 text-xs">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Kode Akun</label>
+                    <input type="text" id="newAccCode" placeholder="Contoh: 101-005" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Nama Akun</label>
+                    <input type="text" id="newAccName" placeholder="Contoh: Kas Operasional Cabang" required class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Kategori Akun</label>
+                    <select id="newAccCategory" required class="w-full px-3 py-2 border border-slate-200 rounded-xl bg-slate-50">
+                        <option value="asset">Aset / Aktiva</option>
+                        <option value="liability">Kewajiban / Liabilitas</option>
+                        <option value="equity">Ekuitas / Modal</option>
+                        <option value="revenue">Pendapatan Usaha</option>
+                        <option value="expense">Beban Operasional</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Pos Saldo Normal</label>
+                    <select id="newAccNormal" required class="w-full px-3 py-2 border border-slate-200 rounded-xl bg-slate-50">
+                        <option value="Debit">Debit</option>
+                        <option value="Kredit">Kredit</option>
+                    </select>
+                </div>
+                <div class="flex justify-end space-x-3 pt-2">
+                    <button type="button" onclick="closeAddAccountModal()" class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold">Batal</button>
+                    <button type="submit" class="bg-slate-900 hover:bg-black text-white font-semibold px-5 py-2 rounded-xl">Simpan Akun</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 3: SECURITY PURGE DATA MODAL -->
+    <div id="purgeModal" class="hidden fixed inset-0 z-50 overflow-y-auto modal-backdrop flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full border border-rose-200 overflow-hidden">
+            <div class="bg-rose-600 text-white px-6 py-4 flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+                    <h3 class="text-sm font-bold">Konfirmasi Security Purge System</h3>
+                </div>
+                <button onclick="closePurgeModal()" class="text-rose-200 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form onsubmit="handlePurgeSubmit(event)" class="p-6 space-y-4 text-xs">
+                <p class="text-slate-600 font-medium">Tindakan ini akan menghapus seluruh data jurnal transaksi dan meriset saldo akun menjadi Rp 0. Masukkan kata sandi master untuk melanjutkan.</p>
+
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Master Password</label>
+                    <input type="password" id="purgePasswordInput" placeholder="Masukkan password master..." required class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-rose-500 font-mono">
+                </div>
+
+                <div id="purgeErrorMessage" class="hidden text-xs text-rose-600 font-bold">
+                    Password master salah! Akses ditolak.
+                </div>
+
+                <div class="flex justify-end space-x-3 pt-2">
+                    <button type="button" onclick="closePurgeModal()" class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold">Batal</button>
+                    <button type="submit" class="bg-rose-600 hover:bg-rose-700 text-white font-semibold px-5 py-2 rounded-xl">Purge Data Sekarang</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT APPLICATION CORE ENGINE -->
+    <script>
+        // APP STATE & DATABASE
+        let appState = {
+            coa: [
+                // Assets (100)
+                { code: '101-001', name: 'Kas Utama & Bank Mandiri', category: 'asset', subcategory: 'current', normal: 'Debit', balance: 0 },
+                { code: '101-002', name: 'Kas Kecil (Petty Cash)', category: 'asset', subcategory: 'current', normal: 'Debit', balance: 0 },
+                { code: '102-001', name: 'Piutang Usaha (Accounts Receivable)', category: 'asset', subcategory: 'current', normal: 'Debit', balance: 0 },
+                { code: '103-001', name: 'Persediaan Barang Dagang', category: 'asset', subcategory: 'current', normal: 'Debit', balance: 0 },
+                { code: '151-001', name: 'Aset Tetap - Peralatan & Komputer', category: 'asset', subcategory: 'noncurrent', normal: 'Debit', balance: 0 },
+                { code: '152-001', name: 'Aset Tetap - Kendaraan Operasional', category: 'asset', subcategory: 'noncurrent', normal: 'Debit', balance: 0 },
+
+                // Liabilities (200)
+                { code: '201-001', name: 'Hutang Usaha (Accounts Payable)', category: 'liability', subcategory: 'current', normal: 'Kredit', balance: 0 },
+                { code: '202-001', name: 'Hutang Pajak & Gaji', category: 'liability', subcategory: 'current', normal: 'Kredit', balance: 0 },
+                { code: '251-001', name: 'Hutang Bank Jangka Panjang', category: 'liability', subcategory: 'noncurrent', normal: 'Kredit', balance: 0 },
+
+                // Equity (300)
+                { code: '301-001', name: 'Modal Disetor (Capital Stock)', category: 'equity', subcategory: 'equity', normal: 'Kredit', balance: 0 },
+
+                // Revenue (400)
+                { code: '401-001', name: 'Pendapatan Jasa Audit & Konsultasi', category: 'revenue', subcategory: 'revenue', normal: 'Kredit', balance: 0 },
+                { code: '402-001', name: 'Pendapatan Lisensi Software Enterprise', category: 'revenue', subcategory: 'revenue', normal: 'Kredit', balance: 0 },
+
+                // Expenses (500)
+                { code: '501-001', name: 'Beban Gaji & Tunjangan Karyawan', category: 'expense', subcategory: 'expense', normal: 'Debit', balance: 0 },
+                { code: '502-001', name: 'Beban Sewa Kantor & Fasilitas', category: 'expense', subcategory: 'expense', normal: 'Debit', balance: 0 },
+                { code: '503-001', name: 'Beban Utilitas & Infrastruktur Cloud', category: 'expense', subcategory: 'expense', normal: 'Debit', balance: 0 },
+                { code: '504-001', name: 'Beban Pemasaran & Operasional', category: 'expense', subcategory: 'expense', normal: 'Debit', balance: 0 },
+                { code: '599-001', name: 'Beban Lain-Lain Tidak Terkategori', category: 'expense', subcategory: 'expense', normal: 'Debit', balance: 0 }
+            ],
+            ledger: [],
+            auditLogs: [],
+            currentCoaFilter: 'all'
+        };
+
+        // Chart instances
+        let charts = {
+            liquidity: null,
+            revExp: null,
+            expensePie: null,
+            radarRisk: null
+        };
+
+        // UTILITIES
+        function formatIDR(amount) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                maximumFractionDigits: 0
+            }).format(amount || 0);
+        }
+
+        function generateHash(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = (hash << 5) - hash + char;
+                hash |= 0;
+            }
+            return '0x' + Math.abs(hash).toString(16).padStart(8, '0').toUpperCase();
+        }
+
+        function logAuditEvent(action, user, details) {
+            const timestamp = new Date().toISOString().replace('T', ' ').substring(0, 19);
+            const raw = `${timestamp}-${action}-${user}-${details}`;
+            const hash = generateHash(raw);
+            appState.auditLogs.unshift({
+                timestamp,
+                action,
+                user,
+                details,
+                hash
+            });
+            renderAuditTrailTable();
+        }
+
+        // TAB SWITCHING LOGIC
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabId}-content`).classList.remove('hidden');
+
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('text-brand-700', 'bg-brand-50', 'font-semibold');
+                btn.classList.add('text-slate-600', 'font-medium');
+            });
+
+            const activeBtn = document.getElementById(`nav-${tabId}`);
+            if (activeBtn) {
+                activeBtn.classList.add('text-brand-700', 'bg-brand-50', 'font-semibold');
+                activeBtn.classList.remove('text-slate-600', 'font-medium');
+            }
+
+            // Sync mobile tabs styling
+            document.querySelectorAll('.mobile-tab-btn').forEach(btn => {
+                btn.classList.remove('bg-brand-700', 'text-white');
+                btn.classList.add('bg-white', 'text-slate-700');
+            });
+
+            if (tabId === 'dashboard') {
+                setTimeout(updateDashboardCharts, 100);
+            }
+        }
+
+        function toggleSystemMenu() {
+            const dropdown = document.getElementById('systemDropdown');
+            dropdown.classList.toggle('hidden');
+        }
+
+        // Close dropdown when clicking outside
+        window.onclick = function(e) {
+            if (!e.target.closest('.relative')) {
+                const dropdown = document.getElementById('systemDropdown');
+                if (dropdown && !dropdown.classList.contains('hidden')) {
+                    dropdown.classList.add('hidden');
+                }
+            }
+        };
+
+        // FINANCIAL COMPUTATIONS
+        function recalculateCOABalances() {
+            // Reset balances to 0
+            appState.coa.forEach(a => a.balance = 0);
+
+            // Re-aggregate from ledger
+            appState.ledger.forEach(tx => {
+                const debitAcc = appState.coa.find(a => a.code === tx.debitCode);
+                const creditAcc = appState.coa.find(a => a.code === tx.creditCode);
+
+                if (debitAcc) {
+                    if (debitAcc.normal === 'Debit') {
+                        debitAcc.balance += tx.amount;
+                    } else {
+                        debitAcc.balance -= tx.amount;
+                    }
+                }
+
+                if (creditAcc) {
+                    if (creditAcc.normal === 'Kredit') {
+                        creditAcc.balance += tx.amount;
+                    } else {
+                        creditAcc.balance -= tx.amount;
+                    }
+                }
+            });
+
+            updateAllUIComponents();
+        }
+
+        function getCategoryTotal(category, subcategory = null) {
+            return appState.coa
+                .filter(a => a.category === category && (!subcategory || a.subcategory === subcategory))
+                .reduce((sum, a) => sum + (a.balance || 0), 0);
+        }
+
+        function getNetIncome() {
+            const rev = getCategoryTotal('revenue');
+            const exp = getCategoryTotal('expense');
+            return rev - exp;
+        }
+
+        // FORENSIC AUDIT ENGINE (AR-001 s/d AR-008)
+        function evaluateForensicRules() {
+            const anomalies = [];
+
+            // Total Assets vs Liabilities + Equity + Retained Net Income
+            const totalAssets = getCategoryTotal('asset');
+            const totalLiabilities = getCategoryTotal('liability');
+            const totalEquity = getCategoryTotal('equity');
+            const netIncome = getNetIncome();
+            const totalPasiva = totalLiabilities + totalEquity + netIncome;
+
+            // AR-001: Keseimbangan Neraca
+            const ar001Passed = Math.abs(totalAssets - totalPasiva) < 1;
+            if (!ar001Passed) {
+                anomalies.push({
+                    rule: 'AR-001',
+                    ruleName: 'Keseimbangan Neraca (Balance Sheet Integrity)',
+                    ref: 'SYS-BAL-01',
+                    date: new Date().toISOString().split('T')[0],
+                    desc: `Ketidakseimbangan Persamaan Akuntansi: Aktiva (${formatIDR(totalAssets)}) != Pasiva (${formatIDR(totalPasiva)})`,
+                    amount: Math.abs(totalAssets - totalPasiva),
+                    severity: 'HIGH',
+                    recommendation: 'Lakukan rekonsiliasi ulang entri penyesuaian jurnal umum.'
+                });
+            }
+
+            // AR-002: Rasio Likuiditas Kas
+            const totalCash = appState.coa.filter(a => a.code.startsWith('101')).reduce((s, a) => s + a.balance, 0);
+            const currentLiabilities = getCategoryTotal('liability', 'current');
+            const cashRatio = currentLiabilities > 0 ? (totalCash / currentLiabilities) : 999;
+            const ar002Passed = currentLiabilities === 0 || cashRatio >= 0.8;
+            if (!ar002Passed) {
+                anomalies.push({
+                    rule: 'AR-002',
+                    ruleName: 'Rasio Likuiditas Kas (Cash Liquidity Risk)',
+                    ref: 'SYS-LIQ-02',
+                    date: new Date().toISOString().split('T')[0],
+                    desc: `Rasio Kas Kritis (${cashRatio.toFixed(2)}x) di bawah ambang batas minimal 0.8x terhadap liabilitas jangka pendek.`,
+                    amount: totalCash,
+                    severity: 'MEDIUM',
+                    recommendation: 'Tingkatkan cadangan kas cepat atau restrukturisasi utang jangka pendek.'
+                });
+            }
+
+            // AR-003: Smurfing / Structuring Detection
+            const smurfingGroup = {};
+            appState.ledger.forEach(tx => {
+                if (tx.amount >= 9000000 && tx.amount < 10000000) {
+                    const key = `${tx.date}_${tx.debitCode}`;
+                    smurfingGroup[key] = (smurfingGroup[key] || []);
+                    smurfingGroup[key].push(tx);
+                }
+            });
+            let ar003Passed = true;
+            Object.keys(smurfingGroup).forEach(k => {
+                if (smurfingGroup[k].length >= 2) {
+                    ar003Passed = false;
+                    smurfingGroup[k].forEach(tx => {
+                        anomalies.push({
+                            rule: 'AR-003',
+                            ruleName: 'Deteksi Smurfing / Structuring',
+                            ref: tx.ref,
+                            date: tx.date,
+                            desc: `Pola transaksi berulang bernominal mendekati ambang Rp 10.000.000 (${formatIDR(tx.amount)})`,
+                            amount: tx.amount,
+                            severity: 'HIGH',
+                            recommendation: 'Periksa dokumentasi pendukung dan verifikasi identitas pihak penerima.'
+                        });
+                    });
+                }
+            });
+
+            // AR-004: Rapid Journal Reversal Detection
+            let ar004Passed = true;
+            appState.ledger.forEach((tx1, idx) => {
+                appState.ledger.slice(idx + 1).forEach(tx2 => {
+                    if (tx1.date === tx2.date && tx1.debitCode === tx2.creditCode && tx1.creditCode === tx2.debitCode && tx1.amount === tx2.amount) {
+                        ar004Passed = false;
+                        anomalies.push({
+                            rule: 'AR-004',
+                            ruleName: 'Rapid Journal Reversal',
+                            ref: `${tx1.ref} / ${tx2.ref}`,
+                            date: tx1.date,
+                            desc: `Pembalikan jurnal langsung tanpa catatan otorisasi pada tanggal yang sama (${formatIDR(tx1.amount)})`,
+                            amount: tx1.amount,
+                            severity: 'MEDIUM',
+                            recommendation: 'Verifikasi pembuat jurnal dan pastikan berita acara pembalikan telah disetujui.'
+                        });
+                    }
+                });
+            });
+
+            // AR-005: Outlier Nominal Transaksi (> Rp 150.000.000)
+            let ar005Passed = true;
+            appState.ledger.forEach(tx => {
+                if (tx.amount >= 150000000) {
+                    ar005Passed = false;
+                    anomalies.push({
+                        rule: 'AR-005',
+                        ruleName: 'Outlier Nominal Transaksi',
+                        ref: tx.ref,
+                        date: tx.date,
+                        desc: `Nilai transaksi terlampau besar melampaui batas wajar operasional (${formatIDR(tx.amount)})`,
+                        amount: tx.amount,
+                        severity: 'HIGH',
+                        recommendation: 'Audit khusus persetujuan Direksi dan kelengkapan kontrak kerja sama.'
+                    });
+                }
+            });
+
+            // AR-006: Duplikasi Referensi
+            const refCounts = {};
+            appState.ledger.forEach(tx => {
+                refCounts[tx.ref] = (refCounts[tx.ref] || 0) + 1;
+            });
+            let ar006Passed = true;
+            Object.keys(refCounts).forEach(r => {
+                if (refCounts[r] > 1) {
+                    ar006Passed = false;
+                    const dupTx = appState.ledger.find(t => t.ref === r);
+                    anomalies.push({
+                        rule: 'AR-006',
+                        ruleName: 'Duplikasi Nomor Referensi',
+                        ref: r,
+                        date: dupTx ? dupTx.date : '-',
+                        desc: `Ditemukan nomor bukti / referensi ganda (${r}) dalam sistem`,
+                        amount: dupTx ? dupTx.amount : 0,
+                        severity: 'HIGH',
+                        recommendation: 'Ganti nomor referensi unik dan periksa kemungkinan double billing.'
+                    });
+                }
+            });
+
+            // AR-007: Akun Tidak Terkategori
+            let ar007Passed = true;
+            appState.ledger.forEach(tx => {
+                if (tx.debitCode === '599-001' || tx.creditCode === '599-001') {
+                    ar007Passed = false;
+                    anomalies.push({
+                        rule: 'AR-007',
+                        ruleName: 'Penggunaan Akun Tidak Terkategori',
+                        ref: tx.ref,
+                        date: tx.date,
+                        desc: `Pengalokasian dana ke dalam akun 'Beban Lain-Lain Tidak Terkategori'`,
+                        amount: tx.amount,
+                        severity: 'LOW',
+                        recommendation: 'Pindahkan pos transaksi ke COA operasional yang spesifik.'
+                    });
+                }
+            });
+
+            // AR-008: Anomali Arus Kas Operasional
+            const ar008Passed = netIncome >= 0;
+            if (!ar008Passed) {
+                anomalies.push({
+                    rule: 'AR-008',
+                    ruleName: 'Anomali Defisit Laba/Rugi Operasional',
+                    ref: 'SYS-INC-08',
+                    date: new Date().toISOString().split('T')[0],
+                    desc: `Posisi keuangan mengalami defisit / rugi bersih sebesar (${formatIDR(Math.abs(netIncome))})`,
+                    amount: Math.abs(netIncome),
+                    severity: 'MEDIUM',
+                    recommendation: 'Evaluasi struktur beban fixed cost dan percepat penagihan piutang.'
+                });
+            }
+
+            const ruleStatus = [
+                { id: 'AR-001', name: 'Keseimbangan Neraca', passed: ar001Passed },
+                { id: 'AR-002', name: 'Rasio Likuiditas Kas', passed: ar002Passed },
+                { id: 'AR-003', name: 'Deteksi Smurfing/Structuring', passed: ar003Passed },
+                { id: 'AR-004', name: 'Rapid Journal Reversal', passed: ar004Passed },
+                { id: 'AR-005', name: 'Outlier Nominal Transaksi', passed: ar005Passed },
+                { id: 'AR-006', name: 'Duplikasi Referensi', passed: ar006Passed },
+                { id: 'AR-007', name: 'Akun Tidak Terkategori', passed: ar007Passed },
+                { id: 'AR-008', name: 'Anomali Arus Kas Operasional', passed: ar008Passed },
+            ];
+
+            const flaggedRefs = new Set(anomalies.map(a => a.ref));
+            appState.ledger.forEach(tx => {
+                tx.status = flaggedRefs.has(tx.ref) ? 'flagged' : 'verified';
+            });
+
+            return { ruleStatus, anomalies };
+        }
+
+        function renderForensicsDashboard() {
+            const { ruleStatus, anomalies } = evaluateForensicRules();
+            const grid = document.getElementById('forensicRulesGrid');
+            grid.innerHTML = '';
+
+            ruleStatus.forEach(rule => {
+                const card = document.createElement('div');
+                card.className = `p-4 rounded-xl border ${rule.passed ? 'border-emerald-200 bg-emerald-50/50' : 'border-rose-200 bg-rose-50/50'} space-y-2`;
+                card.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-mono font-bold ${rule.passed ? 'text-emerald-700' : 'text-rose-700'}">${rule.id}</span>
+                        <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full ${rule.passed ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">
+                            ${rule.passed ? 'LULUS (PASS)' : 'TERDETEKSI (FLAG)'}
+                        </span>
+                    </div>
+                    <h4 class="text-xs font-bold text-slate-800">${rule.name}</h4>
+                    <p class="text-[11px] text-slate-500">${rule.passed ? 'Sistem tidak menemukan indikasi pelanggaran aturan ini.' : 'Ditemukan potensi anomali. Periksa detail temuan.'}</p>
+                `;
+                grid.appendChild(card);
+            });
+
+            const tbody = document.getElementById('forensicAnomalyTableBody');
+            tbody.innerHTML = '';
+            document.getElementById('detectedAnomaliesBadge').textContent = `${anomalies.length} Temuan`;
+
+            if (anomalies.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="py-6 text-center text-slate-400">
+                            <i class="fa-solid fa-circle-check text-emerald-500 text-xl block mb-2"></i>
+                            Tidak ada anomali atau fraud terdeteksi. Seluruh aturan diagnostic AR-001 s/d AR-008 terpenuhi.
+                        </td>
+                    </tr>
+                `;
+            } else {
+                anomalies.forEach(a => {
+                    const row = document.createElement('tr');
+                    const badgeClass = a.severity === 'HIGH' ? 'bg-rose-100 text-rose-800' : (a.severity === 'MEDIUM' ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800');
+                    row.innerHTML = `
+                        <td class="py-3 px-4 font-mono font-bold text-brand-700">${a.rule}</td>
+                        <td class="py-3 px-4">${a.date}<br><span class="font-mono text-slate-500">${a.ref}</span></td>
+                        <td class="py-3 px-4 font-medium text-slate-800">${a.desc}</td>
+                        <td class="py-3 px-4 text-right font-mono font-semibold">${formatIDR(a.amount)}</td>
+                        <td class="py-3 px-4 text-center">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold ${badgeClass}">${a.severity}</span>
+                        </td>
+                        <td class="py-3 px-4 text-slate-600">${a.recommendation}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+
+            const banner = document.getElementById('systemNotificationBanner');
+            if (anomalies.length > 0) {
+                banner.classList.remove('hidden');
+                document.getElementById('systemNotificationText').textContent = `Peringatan Audit Forensik: Ditemukan ${anomalies.length} entri anomali yang membutuhkan perhatian eksekutif.`;
+            } else {
+                banner.classList.add('hidden');
+            }
+        }
+
+        function dismissNotification() {
+            document.getElementById('systemNotificationBanner').classList.add('hidden');
+        }
+
+        function runForensicEngineScan() {
+            recalculateCOABalances();
+            logAuditEvent('FORENSIC_SCAN', 'System AI Engine', 'Menjalankan pemindaian penuh aturan AR-001 s/d AR-008');
+        }
+
+        function updateAllUIComponents() {
+            const { anomalies } = evaluateForensicRules();
+
+            // KPI 1: Assets
+            const totalAssets = getCategoryTotal('asset');
+            document.getElementById('kpiTotalAssets').textContent = formatIDR(totalAssets);
+
+            // KPI 2: Cash & Liquidity
+            const totalCash = appState.coa.filter(a => a.code.startsWith('101')).reduce((s, a) => s + a.balance, 0);
+            document.getElementById('kpiTotalCash').textContent = formatIDR(totalCash);
+            const currentLiabilities = getCategoryTotal('liability', 'current');
+            const cashRatio = currentLiabilities > 0 ? (totalCash / currentLiabilities).toFixed(2) : '∞';
+            document.getElementById('kpiCashRatio').textContent = `${cashRatio}x`;
+
+            // KPI 3: Net Profit & Margin
+            const netIncome = getNetIncome();
+            const totalRev = getCategoryTotal('revenue');
+            const profitMargin = totalRev > 0 ? ((netIncome / totalRev) * 100).toFixed(1) : 0;
+            document.getElementById('kpiNetProfit').textContent = formatIDR(netIncome);
+            document.getElementById('kpiNetProfit').className = `text-2xl font-extrabold font-mono ${netIncome >= 0 ? 'text-slate-900' : 'text-rose-600'}`;
+            document.getElementById('kpiProfitMargin').textContent = `${profitMargin}%`;
+
+            // KPI 4: Compliance Score
+            const anomalyCount = anomalies.length;
+            const score = Math.max(0, 100 - (anomalyCount * 12.5));
+            document.getElementById('kpiAuditScore').textContent = `${score}%`;
+            document.getElementById('kpiFlaggedCount').textContent = anomalyCount;
+            const badge = document.getElementById('kpiAuditBadge');
+            if (score >= 90) {
+                badge.className = 'text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800';
+                badge.textContent = 'OPTIMAL';
+            } else if (score >= 70) {
+                badge.className = 'text-xs font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800';
+                badge.textContent = 'PERHATIAN';
+            } else {
+                badge.className = 'text-xs font-bold px-2 py-0.5 rounded-full bg-rose-100 text-rose-800';
+                badge.textContent = 'RISIKO TINGGI';
+            }
+
+            renderGeneralLedgerTable();
+            renderCOATable();
+            renderBalanceSheetView();
+            renderIncomeStatementView();
+            renderForensicsDashboard();
+            updateDashboardCharts();
+            populateModalDropdowns();
+        }
+
+        function renderGeneralLedgerTable() {
+            const tbody = document.getElementById('ledgerTableBody');
+            const search = document.getElementById('ledgerSearchInput').value.toLowerCase();
+            const accFilter = document.getElementById('ledgerAccountFilter').value;
+            const statusFilter = document.getElementById('ledgerStatusFilter').value;
+
+            tbody.innerHTML = '';
+
+            const filtered = appState.ledger.filter(tx => {
+                const matchesSearch = tx.ref.toLowerCase().includes(search) || tx.description.toLowerCase().includes(search) || tx.amount.toString().includes(search);
+                const matchesAcc = !accFilter || tx.debitCode === accFilter || tx.creditCode === accFilter;
+                const matchesStatus = !statusFilter || tx.status === statusFilter;
+                return matchesSearch && matchesAcc && matchesStatus;
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="py-6 text-center text-slate-400">
+                            Tidak ada transaksi jurnal umum yang cocok dengan kriteria filter.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            filtered.forEach(tx => {
+                const debitAcc = appState.coa.find(a => a.code === tx.debitCode);
+                const creditAcc = appState.coa.find(a => a.code === tx.creditCode);
+
+                const row = document.createElement('tr');
+                row.className = tx.status === 'flagged' ? 'bg-rose-50/40 hover:bg-rose-50/70' : 'hover:bg-slate-50';
+                row.innerHTML = `
+                    <td class="py-3 px-4 font-mono">${tx.date}</td>
+                    <td class="py-3 px-4 font-mono font-bold text-slate-800">${tx.ref}</td>
+                    <td class="py-3 px-4 font-medium text-slate-900">${tx.description}</td>
+                    <td class="py-3 px-4"><span class="font-mono text-slate-500">${tx.debitCode}</span><br>${debitAcc ? debitAcc.name : ''}</td>
+                    <td class="py-3 px-4"><span class="font-mono text-slate-500">${tx.creditCode}</span><br>${creditAcc ? creditAcc.name : ''}</td>
+                    <td class="py-3 px-4 text-right font-mono font-bold text-slate-900">${formatIDR(tx.amount)}</td>
+                    <td class="py-3 px-4 text-center">
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold ${tx.status === 'flagged' ? 'bg-rose-100 text-rose-800' : 'bg-emerald-100 text-emerald-800'}">
+                            ${tx.status === 'flagged' ? 'FLAGGED' : 'VERIFIED'}
+                        </span>
+                    </td>
+                    <td class="py-3 px-4 text-center">
+                        <button onclick="deleteJournalEntry('${tx.ref}')" class="text-slate-400 hover:text-rose-600 p-1" title="Hapus Jurnal"><i class="fa-solid fa-trash-can text-xs"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function filterCOAType(type) {
+            appState.currentCoaFilter = type;
+            document.querySelectorAll('.coa-tab').forEach(b => {
+                b.classList.remove('active', 'bg-slate-50', 'text-slate-900', 'font-bold');
+                b.classList.add('bg-white', 'text-slate-600', 'font-semibold');
+            });
+            event.currentTarget.classList.add('active', 'bg-slate-50', 'text-slate-900', 'font-bold');
+            event.currentTarget.classList.remove('bg-white', 'text-slate-600');
+            renderCOATable();
+        }
+
+        function renderCOATable() {
+            const tbody = document.getElementById('coaTableBody');
+            tbody.innerHTML = '';
+
+            document.getElementById('countCoaAll').textContent = appState.coa.length;
+            document.getElementById('countCoaAsset').textContent = appState.coa.filter(a => a.category === 'asset').length;
+            document.getElementById('countCoaLiability').textContent = appState.coa.filter(a => a.category === 'liability').length;
+            document.getElementById('countCoaEquity').textContent = appState.coa.filter(a => a.category === 'equity').length;
+            document.getElementById('countCoaRevExp').textContent = appState.coa.filter(a => a.category === 'revenue' || a.category === 'expense').length;
+
+            const filtered = appState.coa.filter(a => {
+                if (appState.currentCoaFilter === 'asset') return a.category === 'asset';
+                if (appState.currentCoaFilter === 'liability') return a.category === 'liability';
+                if (appState.currentCoaFilter === 'equity') return a.category === 'equity';
+                if (appState.currentCoaFilter === 'revenue_expense') return a.category === 'revenue' || a.category === 'expense';
+                return true;
+            });
+
+            filtered.forEach(acc => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-slate-50';
+                row.innerHTML = `
+                    <td class="py-3 px-4 font-mono font-bold text-slate-800">${acc.code}</td>
+                    <td class="py-3 px-4 font-medium text-slate-900">${acc.name}</td>
+                    <td class="py-3 px-4 uppercase text-[10px] font-bold text-slate-500">${acc.category} (${acc.subcategory})</td>
+                    <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-100 text-slate-700">${acc.normal}</span></td>
+                    <td class="py-3 px-4 text-right font-mono font-bold text-slate-900">${formatIDR(acc.balance)}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function renderBalanceSheetView() {
+            const currentAssets = appState.coa.filter(a => a.category === 'asset' && a.subcategory === 'current');
+            const nonCurrentAssets = appState.coa.filter(a => a.category === 'asset' && a.subcategory === 'noncurrent');
+            const liabilities = appState.coa.filter(a => a.category === 'liability');
+            const equityList = appState.coa.filter(a => a.category === 'equity');
+
+            const caContainer = document.getElementById('bsCurrentAssetsList');
+            caContainer.innerHTML = currentAssets.map(a => `
+                <div class="flex justify-between items-center text-slate-700">
+                    <span>${a.code} - ${a.name}</span>
+                    <span class="font-mono font-medium">${formatIDR(a.balance)}</span>
+                </div>
+            `).join('');
+
+            const ncaContainer = document.getElementById('bsNonCurrentAssetsList');
+            ncaContainer.innerHTML = nonCurrentAssets.map(a => `
+                <div class="flex justify-between items-center text-slate-700">
+                    <span>${a.code} - ${a.name}</span>
+                    <span class="font-mono font-medium">${formatIDR(a.balance)}</span>
+                </div>
+            `).join('');
+
+            const liabContainer = document.getElementById('bsLiabilitiesList');
+            liabContainer.innerHTML = liabilities.map(a => `
+                <div class="flex justify-between items-center text-slate-700">
+                    <span>${a.code} - ${a.name}</span>
+                    <span class="font-mono font-medium">${formatIDR(a.balance)}</span>
+                </div>
+            `).join('');
+
+            const eqContainer = document.getElementById('bsEquityList');
+            eqContainer.innerHTML = equityList.map(a => `
+                <div class="flex justify-between items-center text-slate-700">
+                    <span>${a.code} - ${a.name}</span>
+                    <span class="font-mono font-medium">${formatIDR(a.balance)}</span>
+                </div>
+            `).join('');
+
+            const totalCA = currentAssets.reduce((s, a) => s + a.balance, 0);
+            const totalNCA = nonCurrentAssets.reduce((s, a) => s + a.balance, 0);
+            const grandAssets = totalCA + totalNCA;
+
+            const totalLiab = liabilities.reduce((s, a) => s + a.balance, 0);
+            const totalEq = equityList.reduce((s, a) => s + a.balance, 0);
+            const retainedEarnings = getNetIncome();
+            const grandPasiva = totalLiab + totalEq + retainedEarnings;
+
+            document.getElementById('bsTotalCurrentAssets').textContent = formatIDR(totalCA);
+            document.getElementById('bsTotalNonCurrentAssets').textContent = formatIDR(totalNCA);
+            document.getElementById('bsGrandTotalAssets').textContent = formatIDR(grandAssets);
+
+            document.getElementById('bsTotalLiabilities').textContent = formatIDR(totalLiab);
+            document.getElementById('bsRetainedEarnings').textContent = formatIDR(retainedEarnings);
+            document.getElementById('bsTotalEquity').textContent = formatIDR(totalEq + retainedEarnings);
+            document.getElementById('bsGrandTotalPasiva').textContent = formatIDR(grandPasiva);
+
+            const badge = document.getElementById('equationStatusBadge');
+            if (Math.abs(grandAssets - grandPasiva) < 1) {
+                badge.className = 'flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold';
+                badge.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i><span>PERSAMAAN SEIMBANG (BALANCED)</span>`;
+            } else {
+                badge.className = 'flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-bold';
+                badge.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-rose-600"></i><span>PERSAMAAN TIDAK SEIMBANG (UNBALANCED: ${formatIDR(Math.abs(grandAssets - grandPasiva))})</span>`;
+            }
+        }
+
+        function renderIncomeStatementView() {
+            const revenues = appState.coa.filter(a => a.category === 'revenue');
+            const expenses = appState.coa.filter(a => a.category === 'expense');
+
+            const revContainer = document.getElementById('isRevenuesList');
+            revContainer.innerHTML = revenues.map(a => `
+                <div class="flex justify-between items-center text-slate-700">
+                    <span>${a.code} - ${a.name}</span>
+                    <span class="font-mono font-medium">${formatIDR(a.balance)}</span>
+                </div>
+            `).join('');
+
+            const expContainer = document.getElementById('isExpensesList');
+            expContainer.innerHTML = expenses.map(a => `
+                <div class="flex justify-between items-center text-slate-700">
+                    <span>${a.code} - ${a.name}</span>
+                    <span class="font-mono font-medium">${formatIDR(a.balance)}</span>
+                </div>
+            `).join('');
+
+            const totalRev = revenues.reduce((s, a) => s + a.balance, 0);
+            const totalExp = expenses.reduce((s, a) => s + a.balance, 0);
+            const netIncome = totalRev - totalExp;
+
+            document.getElementById('isTotalRevenue').textContent = formatIDR(totalRev);
+            document.getElementById('isTotalExpenses').textContent = formatIDR(totalExp);
+            document.getElementById('isNetProfitValue').textContent = formatIDR(netIncome);
+
+            const container = document.getElementById('isNetProfitContainer');
+            if (netIncome >= 0) {
+                container.className = 'p-5 rounded-2xl border border-emerald-300 bg-slate-900 text-white flex justify-between items-center font-extrabold';
+                document.getElementById('isNetProfitValue').className = 'text-2xl font-mono text-emerald-400';
+            } else {
+                container.className = 'p-5 rounded-2xl border border-rose-300 bg-slate-900 text-white flex justify-between items-center font-extrabold';
+                document.getElementById('isNetProfitValue').className = 'text-2xl font-mono text-rose-400';
+            }
+        }
+
+        function renderAuditTrailTable() {
+            const tbody = document.getElementById('auditTrailTableBody');
+            tbody.innerHTML = '';
+
+            appState.auditLogs.forEach(log => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-slate-50';
+                row.innerHTML = `
+                    <td class="py-3 px-4 font-mono text-slate-500">${log.timestamp}</td>
+                    <td class="py-3 px-4 font-bold text-slate-800">${log.action}</td>
+                    <td class="py-3 px-4 text-slate-600">${log.user}</td>
+                    <td class="py-3 px-4 font-medium text-slate-900">${log.details}</td>
+                    <td class="py-3 px-4 font-mono text-brand-700 font-bold">${log.hash}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function updateDashboardCharts() {
+            if (document.getElementById('tab-dashboard-content').classList.contains('hidden')) return;
+
+            const dates = [...new Set(appState.ledger.map(t => t.date))].sort();
+            let runningCash = 0;
+            const cashData = dates.map(d => {
+                const txs = appState.ledger.filter(t => t.date === d);
+                txs.forEach(t => {
+                    if (t.debitCode.startsWith('101')) runningCash += t.amount;
+                    if (t.creditCode.startsWith('101')) runningCash -= t.amount;
+                });
+                return runningCash;
+            });
+
+            if (charts.liquidity) charts.liquidity.destroy();
+            const ctx1 = document.getElementById('liquidityChart').getContext('2d');
+            charts.liquidity = new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: dates.length > 0 ? dates : ['Periode Initial'],
+                    datasets: [{
+                        label: 'Saldo Kas & Bank (Rp)',
+                        data: cashData.length > 0 ? cashData : [0],
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37, 99, 235, 0.08)',
+                        fill: true,
+                        tension: 0.3,
+                        borderWidth: 2,
+                        pointBackgroundColor: '#1e40af'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { ticks: { callback: v => 'Rp ' + (v / 1e6).toFixed(0) + 'Jt' } }
+                    }
+                }
+            });
+
+            const rev = getCategoryTotal('revenue');
+            const exp = getCategoryTotal('expense');
+            if (charts.revExp) charts.revExp.destroy();
+            const ctx2 = document.getElementById('revExpChart').getContext('2d');
+            charts.revExp = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: ['Pendapatan Usaha', 'Beban Operasional'],
+                    datasets: [{
+                        data: [rev, exp],
+                        backgroundColor: ['#10b981', '#f43f5e'],
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { ticks: { callback: v => 'Rp ' + (v / 1e6).toFixed(0) + 'Jt' } }
+                    }
+                }
+            });
+
+            const expAccounts = appState.coa.filter(a => a.category === 'expense' && a.balance > 0);
+            if (charts.expensePie) charts.expensePie.destroy();
+            const ctx3 = document.getElementById('expensePieChart').getContext('2d');
+            charts.expensePie = new Chart(ctx3, {
+                type: 'doughnut',
+                data: {
+                    labels: expAccounts.map(a => a.name.length > 20 ? a.name.substring(0, 20) + '...' : a.name),
+                    datasets: [{
+                        data: expAccounts.map(a => a.balance),
+                        backgroundColor: ['#3b82f6', '#6366f1', '#8b5cf6', '#ec4899', '#f97316', '#14b8a6']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } } }
+                }
+            });
+
+            const { ruleStatus } = evaluateForensicRules();
+            if (charts.radarRisk) charts.radarRisk.destroy();
+            const ctx4 = document.getElementById('radarRiskChart').getContext('2d');
+            const ruleLabels = ruleStatus.map(r => r.id);
+            const ruleScores = ruleStatus.map(r => r.passed ? 100 : 25);
+            charts.radarRisk = new Chart(ctx4, {
+                type: 'radar',
+                data: {
+                    labels: ruleLabels,
+                    datasets: [{
+                        label: 'Skor Kepatuhan Audit (%)',
+                        data: ruleScores,
+                        backgroundColor: 'rgba(29, 78, 216, 0.2)',
+                        borderColor: '#1d4ed8',
+                        pointBackgroundColor: '#1d4ed8',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            min: 0,
+                            max: 100,
+                            ticks: { display: false }
+                        }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        // MODAL & ACTION HANDLERS
+        function populateModalDropdowns() {
+            const debitSelect = document.getElementById('txDebitAccount');
+            const creditSelect = document.getElementById('txCreditAccount');
+            const filterSelect = document.getElementById('ledgerAccountFilter');
+
+            const currentDebit = debitSelect.value;
+            const currentCredit = creditSelect.value;
+            const currentFilter = filterSelect.value;
+
+            debitSelect.innerHTML = '';
+            creditSelect.innerHTML = '';
+            filterSelect.innerHTML = '<option value="">Semua Akun Buku Besar</option>';
+
+            appState.coa.forEach(a => {
+                const optText = `${a.code} - ${a.name}`;
+                debitSelect.add(new Option(optText, a.code));
+                creditSelect.add(new Option(optText, a.code));
+                filterSelect.add(new Option(optText, a.code));
+            });
+
+            if (currentDebit) debitSelect.value = currentDebit;
+            if (currentCredit) creditSelect.value = currentCredit;
+            if (currentFilter) filterSelect.value = currentFilter;
+        }
+
+        function openNewTransactionModal() {
+            populateModalDropdowns();
+            document.getElementById('txDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('txRef').value = `TX-${Date.now().toString().slice(-6)}`;
+            document.getElementById('txDescription').value = '';
+            document.getElementById('txAmount').value = '';
+            updatePrePostingSimulator();
+            document.getElementById('newTransactionModal').classList.remove('hidden');
+        }
+
+        function closeNewTransactionModal() {
+            document.getElementById('newTransactionModal').classList.add('hidden');
+        }
+
+        function updatePrePostingSimulator() {
+            const debitCode = document.getElementById('txDebitAccount').value;
+            const creditCode = document.getElementById('txCreditAccount').value;
+            const amount = parseFloat(document.getElementById('txAmount').value) || 0;
+
+            const debitAcc = appState.coa.find(a => a.code === debitCode);
+            const creditAcc = appState.coa.find(a => a.code === creditCode);
+
+            let newDebitBal = debitAcc ? debitAcc.balance : 0;
+            let newCreditBal = creditAcc ? creditAcc.balance : 0;
+
+            if (debitAcc) {
+                newDebitBal += (debitAcc.normal === 'Debit' ? amount : -amount);
+            }
+            if (creditAcc) {
+                newCreditBal += (creditAcc.normal === 'Kredit' ? amount : -amount);
+            }
+
+            document.getElementById('simDebitNewBalance').textContent = formatIDR(newDebitBal);
+            document.getElementById('simCreditNewBalance').textContent = formatIDR(newCreditBal);
+
+            const simStatus = document.getElementById('simBalanceStatus');
+            if (debitCode && creditCode && debitCode === creditCode) {
+                simStatus.className = 'text-[10px] px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 font-bold';
+                simStatus.textContent = 'AKUN SAMA (INVALID)';
+            } else if (amount > 0) {
+                simStatus.className = 'text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold';
+                simStatus.textContent = 'DEBIT = KREDIT (BALANCED)';
+            } else {
+                simStatus.className = 'text-[10px] px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-bold';
+                simStatus.textContent = 'MASUKKAN NOMINAL';
+            }
+        }
+
+        function handlePostTransaction(e) {
+            e.preventDefault();
+            const date = document.getElementById('txDate').value;
+            const ref = document.getElementById('txRef').value;
+            const description = document.getElementById('txDescription').value;
+            const debitCode = document.getElementById('txDebitAccount').value;
+            const creditCode = document.getElementById('txCreditAccount').value;
+            const amount = parseFloat(document.getElementById('txAmount').value);
+
+            if (debitCode === creditCode) {
+                alert('Akun Debit dan Kredit tidak boleh sama.');
+                return;
+            }
+
+            appState.ledger.unshift({
+                date,
+                ref,
+                description,
+                debitCode,
+                creditCode,
+                amount,
+                status: 'verified'
+            });
+
+            logAuditEvent('POST_TRANSACTION', 'Eksekutif User', `Posting Jurnal ${ref}: ${formatIDR(amount)}`);
+            recalculateCOABalances();
+            closeNewTransactionModal();
+        }
+
+        function deleteJournalEntry(ref) {
+            if (confirm(`Apakah Anda yakin ingin menghapus transaksi jurnal ${ref}?`)) {
+                appState.ledger = appState.ledger.filter(t => t.ref !== ref);
+                logAuditEvent('DELETE_TRANSACTION', 'Eksekutif User', `Menghapus entri jurnal ref: ${ref}`);
+                recalculateCOABalances();
+            }
+        }
+
+        function openAddAccountModal() {
+            document.getElementById('addAccountModal').classList.remove('hidden');
+        }
+
+        function closeAddAccountModal() {
+            document.getElementById('addAccountModal').classList.add('hidden');
+        }
+
+        function handleAddAccountSubmit(e) {
+            e.preventDefault();
+            const code = document.getElementById('newAccCode').value.trim();
+            const name = document.getElementById('newAccName').value.trim();
+            const category = document.getElementById('newAccCategory').value;
+            const normal = document.getElementById('newAccNormal').value;
+
+            if (appState.coa.some(a => a.code === code)) {
+                alert('Kode akun sudah terdaftar dalam COA.');
+                return;
+            }
+
+            let subcategory = category;
+            if (category === 'asset') subcategory = 'current';
+            if (category === 'liability') subcategory = 'current';
+
+            appState.coa.push({
+                code,
+                name,
+                category,
+                subcategory,
+                normal,
+                balance: 0
+            });
+
+            logAuditEvent('ADD_COA_ACCOUNT', 'Eksekutif User', `Menambahkan akun baru: ${code} - ${name}`);
+            recalculateCOABalances();
+            closeAddAccountModal();
+        }
+
+        function openPurgeModal() {
+            document.getElementById('purgePasswordInput').value = '';
+            document.getElementById('purgeErrorMessage').classList.add('hidden');
+            document.getElementById('purgeModal').classList.remove('hidden');
+        }
+
+        function closePurgeModal() {
+            document.getElementById('purgeModal').classList.add('hidden');
+        }
+
+        function handlePurgeSubmit(e) {
+            e.preventDefault();
+            const pass = document.getElementById('purgePasswordInput').value;
+            if (pass === 'admin123' || pass === 'ARESTU2026') {
+                appState.ledger = [];
+                logAuditEvent('SYSTEM_PURGE', 'Master Admin', 'Pembersihan penuh (Purge) seluruh transaksi jurnal');
+                recalculateCOABalances();
+                closePurgeModal();
+                alert('Sistem berhasil dibersihkan (Purge Completed).');
+            } else {
+                document.getElementById('purgeErrorMessage').classList.remove('hidden');
+            }
+        }
+
+        function loadEnterpriseSeedData() {
+            appState.ledger = [
+                { date: '2026-03-01', ref: 'BKM-2026-001', description: 'Setoran Capital Stock Modal Disetor', debitCode: '101-001', creditCode: '301-001', amount: 500000000, status: 'verified' },
+                { date: '2026-03-02', ref: 'BKK-2026-001', description: 'Pembelian Laptop & Server Server Cloud', debitCode: '151-001', creditCode: '101-001', amount: 45000000, status: 'verified' },
+                { date: '2026-03-05', ref: 'INV-2026-001', description: 'Pendapatan Jasa Konsultasi Audit Forensik Enterprise', debitCode: '101-001', creditCode: '401-001', amount: 120000000, status: 'verified' },
+                { date: '2026-03-10', ref: 'INV-2026-002', description: 'Lisensi Software Audit Intelligence AI', debitCode: '101-001', creditCode: '402-001', amount: 85000000, status: 'verified' },
+                { date: '2026-03-12', ref: 'BKK-2026-002', description: 'Pembayaran Gaji Karyawan & Tunjangan', debitCode: '501-001', creditCode: '101-001', amount: 35000000, status: 'verified' },
+                { date: '2026-03-14', ref: 'BKK-2026-003', description: 'Beban Sewa Gedung Kantor Pusat', debitCode: '502-001', creditCode: '101-001', amount: 15000000, status: 'verified' },
+                { date: '2026-03-15', ref: 'BKK-2026-004', description: 'Infrastruktur Cloud & Server AWS/Azure', debitCode: '503-001', creditCode: '101-001', amount: 8500000, status: 'verified' },
+                { date: '2026-03-15', ref: 'BKK-2026-005', description: 'Beban Kampanye Pemasaran Digital', debitCode: '504-001', creditCode: '101-001', amount: 12000000, status: 'verified' },
+                // Triggering AR-003 (Smurfing/Structuring Simulation)
+                { date: '2026-03-18', ref: 'TX-SMURF-01', description: 'Penerimaan Kas Berulang A', debitCode: '101-001', creditCode: '401-001', amount: 9800000, status: 'flagged' },
+                { date: '2026-03-18', ref: 'TX-SMURF-02', description: 'Penerimaan Kas Berulang B', debitCode: '101-001', creditCode: '401-001', amount: 9750000, status: 'flagged' }
+            ];
+
+            logAuditEvent('LOAD_SEED_DATA', 'System Enterprise', 'Memuat data simulasi transaksi standar enterprise');
+            recalculateCOABalances();
+        }
+
+        function exportAuditReportCSV() {
+            let csv = 'Tanggal,Nomor Ref,Uraian,Debit Code,Kredit Code,Nominal,Status\n';
+            appState.ledger.forEach(t => {
+                csv += `"${t.date}","${t.ref}","${t.description}","${t.debitCode}","${t.creditCode}",${t.amount},"${t.status}"\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `General_Ledger_Report_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+        }
+
+        function exportAuditTrailJSON() {
+            const json = JSON.stringify(appState.auditLogs, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Audit_Trail_Logs_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+        }
+
+        // ENHANCED MATHEMATICAL & CHATBOT INTELLIGENCE ENGINE
+        function askAIQuery(query) {
+            switchTab('aiAssistant');
+            document.getElementById('aiQueryInput').value = query;
+            processAIQuery(query);
+        }
+
+        function handleAISubmit(e) {
+            e.preventDefault();
+            const input = document.getElementById('aiQueryInput');
+            const query = input.value.trim();
+            if (!query) return;
+            input.value = '';
+            processAIQuery(query);
+        }
+
+        function processAIQuery(query) {
+            const chatContainer = document.getElementById('aiChatContainer');
+
+            // 1. Render User Message
+            const userMsg = document.createElement('div');
+            userMsg.className = 'flex items-start justify-end space-x-3';
+            userMsg.innerHTML = `
+                <div class="bg-brand-700 text-white p-3.5 rounded-2xl text-xs space-y-1 max-w-xl shadow-sm">
+                    <p>${query}</p>
+                </div>
+            `;
+            chatContainer.appendChild(userMsg);
+
+            // 2. AI Intelligence Logic Processing
+            let aiResponse = "";
+            const lowerQuery = query.toLowerCase();
+
+            // Modul Evaluasi Matematika, Formula & Rumus Kompleks
+            if (/[0-9\+\-\*\/\^\(\)]/.test(query) && (lowerQuery.includes('hitung') || lowerQuery.includes('berapa') || lowerQuery.includes('rumus') || lowerQuery.includes('akar') || lowerQuery.includes('integral') || lowerQuery.includes('turunan') || lowerQuery.includes('evaluasi'))) {
+                try {
+                    // Penanganan Ekspresi Matematika Langsung
+                    const cleanMathStr = query.replace(/[^0-9\+\-\*\/\^\(\)\.\,\s]/g, '').trim();
+                    let evaluatedResult = null;
+                    if (cleanMathStr) {
+                        try {
+                            const mathExpr = cleanMathStr.replace(/\^/g, '**');
+                            evaluatedResult = Function(`'use strict'; return (${mathExpr})`)();
+                        } catch (err) {
+                            evaluatedResult = null;
+                        }
+                    }
+
+                    aiResponse = `<strong>[Modul Evaluasi Matematika & Kalkulus Engine]</strong><br><br>`;
+                    if (evaluatedResult !== null && !isNaN(evaluatedResult)) {
+                        aiResponse += `<b>Hasil Kalkulasi Eksak:</b><br><code class="bg-slate-100 px-2 py-1 rounded text-brand-800 font-mono text-sm">${cleanMathStr} = ${evaluatedResult.toLocaleString('id-ID')}</code><br><br>`;
+                    }
+
+                    if (lowerQuery.includes('benford')) {
+                        aiResponse += `<b>Hukum Benford (Analisis Digit Pertama):</b><br>
+                        Formulasi probabilitas munculnya digit $d \\in \\{1, 2, \\dots, 9\\}$: <br>
+                        $$P(d) = \\log_{10}\\left(1 + \\frac{1}{d}\\right)$$<br>
+                        Digunakan dalam audit forensik untuk memverifikasi apakah distribusi angka dalam transaksi laporan keuangan alami atau direkayasa (fraud).`;
+                    } else if (lowerQuery.includes('integral')) {
+                        aiResponse += `<b>Kalkulus Integral:</b><br>
+                        Integral mendefinisikan akumulasi area di bawah kurva: <br>
+                        $$\\int_{a}^{b} f(x) \, dx$$<br>
+                        Dalam analisis kuantitatif keuangan, kalkulus integral digunakan untuk menghitung nilai akumulasi arus kas kontinu dan penilaian risiko opsi kuantitatif.`;
+                    } else if (lowerQuery.includes('turunan') || lowerQuery.includes('diferensial')) {
+                        aiResponse += `<b>Kalkulus Diferensial:</b><br>
+                        Turunan pertama menentukan laju perubahan instan: <br>
+                        $$f'(x) = \\lim_{h \\to 0} \\frac{f(x+h) - f(x)}{h}$$<br>
+                        Dalam ekonomi keuangan, turunan parsial $\\frac{\\partial f}{\\partial x}$ menentukan marginal cost, marginal revenue, dan kalkulasi 'Greeks' (Delta/Gamma) dalam model Black-Scholes.`;
+                    } else {
+                        aiResponse += `Analisis kalkulasi matematis berbasis aljabar murni dan prinsip stokastik telah diselesaikan.`;
+                    }
+                } catch (e) {
+                    aiResponse = `Terjadi kesalahan sintaks dalam evaluasi perhitungan matematika tersebut. Mohon periksa format simbol rumusnya.`;
+                }
+            } 
+            // Modul Analisis Keuangan & Audit Forensik Sistem Real-Time
+            else if (lowerQuery.includes('rasio') || lowerQuery.includes('likuiditas') || lowerQuery.includes('neraca') || lowerQuery.includes('laba') || lowerQuery.includes('anomali') || lowerQuery.includes('fraud') || lowerQuery.includes('ringkasan')) {
+                const totalCash = appState.coa.filter(a => a.code.startsWith('101')).reduce((s, a) => s + a.balance, 0);
+                const totalAssets = getCategoryTotal('asset');
+                const totalLiabilities = getCategoryTotal('liability');
+                const currentLiabilities = getCategoryTotal('liability', 'current');
+                const netIncome = getNetIncome();
+                const totalRev = getCategoryTotal('revenue');
+                const cashRatio = currentLiabilities > 0 ? (totalCash / currentLiabilities).toFixed(2) : '∞';
+                const profitMargin = totalRev > 0 ? ((netIncome / totalRev) * 100).toFixed(1) : '0';
+                const { anomalies } = evaluateForensicRules();
+
+                aiResponse = `<strong>[Analisis Keuangan Exec-Intelligence Real-Time]</strong><br><br>
+                - <b>Total Aset Terverifikasi:</b> ${formatIDR(totalAssets)}<br>
+                - <b>Likuiditas Kas & Bank:</b> ${formatIDR(totalCash)} (Cash Ratio: <b>${cashRatio}x</b>)<br>
+                - <b>Laba / (Rugi) Bersih Berjalan:</b> ${formatIDR(netIncome)} (Margin: <b>${profitMargin}%</b>)<br>
+                - <b>Kewajiban / Total Utang:</b> ${formatIDR(totalLiabilities)}<br>
+                - <b>Status Anomali Forensik:</b> <b>${anomalies.length} Temuan</b> Terdeteksi.<br><br>
+                ${anomalies.length > 0 ? '⚠️ <i>Rekomendasi: Periksa tab Audit Forensik untuk membedah temuan indikator AR-001 s/d AR-008.</i>' : '✅ <i>Persamaan dasar Aktiva = Pasiva seimbang dan tidak ditemukan pelanggaran aturan integritas.</i>'}`;
+            } 
+            // Modul Percakapan Adaptif, Fleksibel, & Diskusi Umum
+            else {
+                aiResponse = `Terima kasih atas pertanyaannya! Sebagai Asisten Eksekutif TUAN ARESTU v6.0, saya sangat senang diajak berdiskusi mengenai topik ini.<br><br>
+                Apakah ada sudut pandang strategi bisnis, analisis data kuantitatif, kalkulasi matematika, atau rekomendasi manajerial spesifik yang ingin kita bedah lebih dalam bersama?`;
+            }
+
+            // 3. Render AI Response
+            setTimeout(() => {
+                const aiMsg = document.createElement('div');
+                aiMsg.className = 'flex items-start space-x-3';
+                aiMsg.innerHTML = `
+                    <div class="w-8 h-8 rounded-lg bg-brand-700 text-white flex items-center justify-center shrink-0 text-xs font-bold">
+                        AI
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200 text-xs text-slate-800 space-y-2 max-w-2xl shadow-sm">
+                        <p>${aiResponse}</p>
+                    </div>
+                `;
+                chatContainer.appendChild(aiMsg);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }, 300);
+        }
+
+        // INITIALIZATION ON PAGE LOAD
+        window.addEventListener('DOMContentLoaded', () => {
+            loadEnterpriseSeedData();
+            switchTab('dashboard');
+        });
+    </script>
+</body>
+</html>
